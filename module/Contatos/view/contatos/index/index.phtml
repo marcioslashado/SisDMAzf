@@ -1,0 +1,172 @@
+<?php
+$this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
+$this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
+?>     
+<script>
+    var app = angular.module('myApp', ['ui.bootstrap']);
+    app.filter('startFrom', function() {
+        return function(input, start) {
+            if (input) {
+                start = +start; //parse to int
+                return input.slice(start);
+            }
+            return [];
+        }
+    });
+    app.controller('customersCrtl', function($scope, $http, $timeout) {
+        $http.get('<?php echo $this->url('listacontatos'); ?>').success(function(data) {
+            $scope.list = data;
+            $scope.currentPage = 1; //current page
+            $scope.entryLimit = 10; //max no of items to display in a page
+            $scope.filteredItems = $scope.list.length; //Initially for no filter  
+            $scope.totalItems = $scope.list.length;
+        });
+        $scope.setPage = function(pageNo) {
+            $scope.currentPage = pageNo;
+        };
+        $scope.filter = function() {
+            $timeout(function() {
+                $scope.filteredItems = $scope.filtered.length;
+            }, 10);
+        };
+        $scope.sort_by = function(predicate) {
+            $scope.predicate = predicate;
+            $scope.reverse = !$scope.reverse;
+        };
+    });
+</script>
+<!-- Modal Detalhes -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Título</h4>
+            </div>
+            <div class="modal-body">
+                CONTEÚDO DETALHADO <strong>Nome</strong>, <strong>Sigla</strong>, <strong>Órgão</strong>, <strong>Endereço</strong>, <strong>Telefone/Ramal</strong>, <strong>Celular</strong>, <strong>Email</strong>, <strong>Cargo</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Form ADD -->
+<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="ModalAddLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionando Contato</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='row'>
+                        <div class="col-md-4">
+                            <label class="control-label" for="nome">Nome Completo</label>
+                            <input name="nome" type="text" id="nome" class="form-control&#x20;input-sm" placeholder="Digite o nome do contato" required="required" value="">
+                            <span class="help-block">Digite o nome do contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite o nome do contato"> <span class="glyphicon" data-icon=""></span></a></span>  
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control-label" for="sigla">Sigla/Instituição</label>
+                            <input name="sigla" type="text" id="sigla" class="form-control&#x20;input-sm" placeholder="SIGLA ou Nome da instituição deste contato" value="">
+                            <span class="help-block">SIGLA ou Nome da instituição deste contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="SIGLA ou Nome da instituição deste contato"> <span class="glyphicon" data-icon=""></span></a></span>  
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control-label" for="sigla">Cargo</label>
+                            <input name="cargo" type="text" id="cargo" class="form-control&#x20;input-sm" placeholder="Cargo deste contato" value="">
+                            <span class="help-block">SIGLA ou Nome da instituição deste contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="SIGLA ou Nome da instituição deste contato"> <span class="glyphicon" data-icon=""></span></a></span>  
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class="col-md-4">
+                            <label class="control-label" for="telefone">Telefone/Ramal</label>
+                            <input name="telefone" type="text" id="telefone" class="form-control&#x20;input-sm" placeholder="Telefone / Ramal" required="required" value="">
+                            <span class="help-block">Digite o nº deste contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite o número telefônico deste contato. Caso haja Ramal, acrescente-o separando com uma barra. Ex.: (99)9999-9999 / 9999"> <span class="glyphicon" data-icon=""></span></a></span>  
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control-label" for="celular">Celular</label>
+                            <input name="celular" type="text" id="celular" class="form-control&#x20;input-sm" placeholder="Número celular. Se o contato possuir mais de um número, separe-os por barra." value="">
+                            <span class="help-block">Nº Celular <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Número celular. Se o contato possuir mais de um número, separe-os por barra."> <span class="glyphicon" data-icon=""></span></a></span>  
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control-label" for="email">Email</label>
+                            <input name="email" type="text" id="email" class="form-control&#x20;input-sm" placeholder="contato@email.com.br" value="">
+                            <span class="help-block">Email do contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite o endereço de email deste contato"> <span class="glyphicon" data-icon=""></span></a></span>  
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <legend class="clearfix">
+        <span class="glyphicon" data-icon="a"></span> Contatos 
+        <a class="btn-sm btn-primary" href="#" data-target="#ModalAdd" data-toggle="modal" data-placement="left" data-original-title="Adicionar Contato"><span data-icon="&#xe03e;" class="glyphicon"></span> Adicionar</a> 
+    </legend>
+    
+<div ng-controller="customersCrtl" style="margin-bottom: 75px;">
+    <div>
+    <div class="row">
+        <div class="col-md-2">Registros por página:
+            <select ng-model="entryLimit" class="form-control">
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+                <option>50</option>
+                <option>100</option>
+            </select>
+        </div>
+        <div class="col-md-3">Pesquisa:
+            <input type="text" ng-model="search" ng-change="filter()" placeholder="Pesquise um dos campos" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <h5>Exibindo {{ filtered.length }} de {{ totalItems}} contatos</h5>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12" ng-show="filteredItems > 0">
+            <table class="table table-striped table-bordered">
+            <thead>
+            <th>ID&nbsp;<a ng-click="sort_by('id_contato');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            <th>Nome&nbsp;<a ng-click="sort_by('nome_completo');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            <th>Sigla&nbsp;<a ng-click="sort_by('o_sigla');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            <th>Cargo&nbsp;<a ng-click="sort_by('cargo');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            <th>Telefone/Ramal&nbsp;<a ng-click="sort_by('fone');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            <th>Celular&nbsp;<a ng-click="sort_by('celular');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            <th>Email&nbsp;<a ng-click="sort_by('email');"><i class="glyphicon glyphicon-sort"></i></a></th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in filtered = (list | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                    <td>{{data.id_contato}}</td>
+                    <td>{{data.nome_completo}}</td>
+                    <td>{{data.o_sigla}}</td>
+                    <td>{{data.cargo}}</td>
+                    <td>{{data.fone}} / {{data.ramal}}</td>
+                    <td>{{data.celular}}</td>
+                    <td>{{data.email}}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <div class="col-md-12" ng-show="filteredItems == 0">
+            <div class="col-md-12">
+                <h4>Nenhum Resultado para sua Pesquisa</h4>
+            </div>
+        </div>
+        <div class="col-md-12" ng-show="filteredItems > 0">    
+            <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>

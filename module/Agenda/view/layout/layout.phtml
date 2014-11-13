@@ -1,0 +1,126 @@
+<?php echo $this->doctype(); ?>
+
+<html ng-app="myApp" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('SisDMA')->setSeparator(' - ') ?>
+
+        <?php
+        echo $this->headMeta()
+                ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+                ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php
+        echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                ->prependStylesheet($this->basePath() . '/css/fonts/fontastic.css')
+                ->prependStylesheet($this->basePath() . '/css/style.css')
+                ->prependStylesheet($this->basePath() . '/css/bootstrap-switch.css')
+                ->prependStylesheet($this->basePath() . '/css/magic-bootstrap.css');
+        ?>
+
+        <!-- Scripts -->
+        <?php
+        echo $this->headScript()
+                ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                ->prependFile($this->basePath() . '/js/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                ->prependFile($this->basePath() . '/js/custom.js')
+                ->prependFile($this->basePath() . '/js/bootstrap-switch.js')
+                ->prependFile($this->basePath() . '/js/tooltip.js')
+                ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+                ->prependFile($this->basePath() . '/js/jquery.min.js');
+        ?>
+
+        <script>
+            $(document).ready(function () {
+                $("[name='situacao-membro']").bootstrapSwitch();
+
+                //Navigation Menu Slider
+                $('#nav-expander').on('click', function (e) {
+                    e.preventDefault();
+                    $('body').toggleClass('nav-expanded');
+                });
+                $('#nav-close').on('click', function (e) {
+                    e.preventDefault();
+                    $('body').removeClass('nav-expanded');
+                });
+            });
+        </script>
+        <script type="text/javascript" charset="utf-8">
+               function init(){}
+        </script>
+    </head>
+    <body onload="init();">
+        <nav>
+            <div class="navbar-header pull-right">
+                <a id="nav-expander" class="nav-expander fixed">
+                    <span class="glyphicon" data-icon="&#xe0a5;"></span>
+                </a>
+            </div>
+            <ul class="list-unstyled main-menu">
+                <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+                <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+                <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+                <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+                <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+            </ul>
+        </nav>
+
+        <!-- Fixed navbar -->
+        <div class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header tooltip-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Alternar navegação</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="<?php echo $this->url('index'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="SisDMA">SisDMA</a>
+                </div>
+                <div class="collapse navbar-collapse tooltip-header">
+                    <ul class="nav navbar-nav">
+                        <li><a class="flat-button-label" href="<?php echo $this->url('home'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="&#xe1d5;"></span> Início</a></li>
+                        <li><a class="flat-button-label" href="<?php echo $this->url('contatos'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="a"></span> Contatos</a></li>
+                        <li><a class="flat-button-label" href="<?php echo $this->url('ligacoes'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="&#xe16c;"></span> Ligações</a></li>
+                        <li><a class="flat-button-label" href="<?php echo $this->url('agenda'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="N"></span> Agenda</a></li>
+                        <li><a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="H"></span> Dossiês</a></li>
+                        <li><a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="&#xe17e;"></span> Relatórios</a></li>
+                        <li><a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="&#xe04c;"></span> Usuários</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon" data-icon="&#xe0a2;"></span> Olá Usuário <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header">Administrador(a)</li>
+                                <li class="dropdown-header"><span class="glyphicon" data-icon="&#xe18a;"></span> Último Acesso: 12/12/2012</li>
+                                <li class="divider"></li>
+                                <li><a href="#" data-toggle="tooltip" data-placement="right" data-original-title="Edite seus Dados"><span class="glyphicon" data-icon="&#xe174;"></span> Editar seus dados</a></li>
+                                <li><a href="#" data-toggle="tooltip" data-placement="right" data-original-title="Sair do sistema em segurança"><span class="glyphicon" data-icon="&#xe174;"></span> Sair do sistema</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div> 
+        </div>
+
+        <?php echo $this->content; ?>
+
+        <div id="footer">
+            <div class="container-fluid">
+                <img src="img/logo_menor.png" width="45" height="45" style="float:left; margin: 5px;">
+                <div style="float: left;">
+                    <p class="text-muted">
+                        IPLANFOR - Instituto de Planejamento de Fortaleza <br>
+                        Paço Municipal – Rua São José, nº 01 - CEP – 60060-170<br>
+                        Fone/Fax: (85)3105-1354 | iplanfor@fortaleza.ce.gov.br<br>
+                    </p>
+                </div>
+                <div id="desenvolvedor" style="float: right; text-align: right; display: none;"><p class="text-muted">Dev.: Marcio Seabra <br> Ver.: 1.0</p></div>
+            </div>
+        </div>
+        <div class="precarregar"></div>
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>
