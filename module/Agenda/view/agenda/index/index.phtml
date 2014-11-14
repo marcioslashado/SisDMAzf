@@ -34,7 +34,6 @@
                 scheduler.config.include_end_by = true;
                 scheduler.config.repeat_precise = true;
 
-
                 scheduler.config.lightbox.sections = [
                     {name: "Título", height: 50, map_to: "text", type: "textarea", focus: true},
                     {name: "description", height: 50, map_to: "details", type: "textarea", focus: true},
@@ -49,10 +48,11 @@
                 scheduler.config.buttons_left = ["dhx_save_btn", "dhx_cancel_btn", "locate_button"];
                 scheduler.locale.labels["locate_button"] = "Localização";
 
-                scheduler.init('scheduler_here', new Date(2010, 05, 11), "week");
-                scheduler.load("./data/events.xml", function () {
-                    scheduler.showLightbox("1261150564");
-                });
+                scheduler.init('scheduler_here', new Date(<?php echo date("Y"); ?>, <?php echo date("m")-1; ?>, <?php echo date("d"); ?>), "day");
+                scheduler.load("<?php echo $this->url('agenda', array('action' => 'list-agenda')); ?>", "json");
+                var dp = new dataProcessor("<?php echo $this->url('agenda', array('action' => 'addedit-agenda')); ?>");
+                dp.init(scheduler);
+
                 scheduler.attachEvent("onLightboxButton", function (button_id, node, e) {
                     if (button_id == "locate_button") {
                         alert("Funções da ação de Localização/Mapa");

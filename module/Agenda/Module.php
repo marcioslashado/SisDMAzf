@@ -9,6 +9,7 @@
 
 namespace Agenda;
 
+use Agenda\Model\AgendaTable;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
@@ -20,6 +21,19 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
+    
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Agenda\Model\AgendaTable' =>  function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new AgendaTable($dbAdapter);
+                    return $table;
+                },
+            ),
+        );
+    }   
 
     public function getConfig()
     {
