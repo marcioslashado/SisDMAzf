@@ -3,9 +3,12 @@ return array(
     
     // This should be an array of module namespaces used in the application.
     'modules' => array(
+        'Users',
+        'UsersACL',
         'Home',
         'Contatos',
         'Ligacoes',
+        'Grupos',
         'Agenda',
     ),
     'module_listener_options' => array(

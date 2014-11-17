@@ -9,11 +9,17 @@
 
 namespace Home\Controller;
 
+use Zend\Db\Sql\Select;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Home\Model\HomeTable;
+use Zend\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
+    protected $agendaTable;
+    protected $ligacoesTable;
+    
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
         $this->headTitleHelper = $this->getServiceLocator()->get('viewHelperManager')->get('headTitle');
         $this->headTitleHelper->append('Página Inicial');
@@ -21,13 +27,29 @@ class IndexController extends AbstractActionController
         parent::onDispatch($e);
     }
 
+    public function getAgendaTable() {
+        if (!$this->agendaTable) {
+            $sm = $this->getServiceLocator();
+            $this->agendaTable = $sm->get('Home\Model\HomeTable');
+        }
+        return $this->agendaTable;
+    }
+    
+    public function getLigacoesTable() {
+        if (!$this->ligacoesTable) {
+            $sm = $this->getServiceLocator();
+            $this->ligacoesTable = $sm->get('Home\Model\HomeTable');
+        }
+        return $this->ligacoesTable;
+    }
 
     public function indexAction()
-    {
-        
-                
-        return new ViewModel();
-//        $view->setTemplate('maff/relatorios/relatorios');
-//        return $view;
+    {          
+            $view = new ViewModel(array(
+                'agenda_dia' => $this->getAgendaTable()->getAgenda(),
+                'ligacoes_dia' => $this->getAgendaTable()->getLigacoes(),
+            ));
+            $view->setTemplate('home/index/index');
+            return $view;
     }
 }

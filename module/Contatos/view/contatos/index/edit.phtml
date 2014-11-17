@@ -1,0 +1,69 @@
+<?php
+$title = 'Editando Contato';
+$this->headTitle($title);
+
+?>
+<div class="container-fluid">
+    <div class="table-responsive">
+        <?php
+        $form = $this->form;
+        $form->setAttribute('action', $this->url('contatos', array('action' => 'edit', 'form_codigo' => $this->form_codigo)));
+        $form->prepare();
+        echo $this->form()->openTag($form) . PHP_EOL;
+        ?>
+        <legend><?php echo $this->escapeHtml($title); ?></legend>
+        <?php echo $this->formHidden($form->get('form_codigo')) . PHP_EOL; ?>
+        <?php if ($this->mensagem) { ?>
+            <div style="margin-top:10px;"><div class="alert alert-success">Contato editado com sucesso! <a class="btn btn-success" href="<?php echo $this->url('contatos'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Contatos</a></div></div>
+        <?php } ?>
+
+        <div class="col-md-4">
+            <label class="control-label" for="nome">Nome *</label>
+            <?php echo $this->formRow($form->get('form_nome')) . PHP_EOL; ?>
+            <span class="help-block">Nome <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o nome."> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+
+        <div class="col-md-4">
+            <label class="control-label" for="form_sigla">Órgão/Sigla</label>
+            <?php echo $this->formRow($form->get('form_sigla')) . PHP_EOL; ?>
+            <span class="help-block">Sigla <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite a sigla ou instituição deste contato."> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+        <div class="col-md-4">
+            <label class="control-label" for="form_cargo">Cargo</label>
+            <?php echo $this->formRow($form->get('form_cargo')) . PHP_EOL; ?>
+            <span class="help-block">Cargo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o cargo deste contato."> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+
+        <div class="col-md-2">
+            <label class="control-label" for="form_telefone">Telefone *</label>
+            <?php echo $this->formRow($form->get('form_telefone')) . PHP_EOL; ?>
+            <span class="help-block">Telefone <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o Telefone e o Ramal caso exista"> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+            
+        <div class="col-md-2">
+            <label class="control-label" for="form_ramal">Ramais</label>
+            <?php echo $this->formRow($form->get('form_ramal')) . PHP_EOL; ?>
+            <span class="help-block">Ramais <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o Telefone e o Ramal caso exista"> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+            
+        <div class="col-md-4">
+            <label class="control-label" for="form_celular">Celular</label>
+            <?php echo $this->formRow($form->get('form_celular')) . PHP_EOL; ?>
+            <span class="help-block">Telefone/Ramal <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o Telefone e o Ramal caso exista"> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+            
+        <div class="col-md-4">
+            <label class="control-label" for="form_email">Email *</label>
+            <div class="input-group">
+                <div class="input-group-addon">@</div>
+                <?php echo $this->formRow($form->get('form_email')) . PHP_EOL; ?>
+            </div>
+            <span class="help-block">Email <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite um endereço de email válido."> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+            
+        <div class="col-md-12">
+            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Editar</button>
+        </div>
+        <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
+    </div>
+</div>

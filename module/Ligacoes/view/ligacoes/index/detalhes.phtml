@@ -1,0 +1,54 @@
+<?php
+$this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
+$this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
+?>  
+
+<?php
+$title = 'Detalhes da Ligação "' . $this->escapeHtml($ligacao->l_id) . '"';
+$this->headTitle($title);
+$date = new \DateTime($this->escapeHtml($ligacao->l_data));
+$dataAtual = $date->format('d/m/Y à\s H:i');
+?>
+
+<div class="container-fluid">
+
+    <div class="table-responsive">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+        <table class="table table-striped">
+            <tr>
+                <th><strong>De:</strong></th>
+                <td><?php echo $this->escapeHtml($ligacao->l_membro); ?></td>
+            </tr>
+            <tr>
+                <th><strong>Para:</strong></th>
+                <td><?php echo $this->escapeHtml($ligacao->l_destino); ?></td>
+            </tr>
+            <tr>
+                <th><strong>Assunto:</strong></th>
+                <td><?php echo $this->escapeHtml($ligacao->l_assunto); ?></td>
+            </tr>
+            <tr>
+                <th><strong>Horário:</strong></th>
+                <td><?php echo $dataAtual; ?></td>
+            </tr>
+            <tr>
+                <th><strong>Status:</strong></th>
+                <td><?php echo $this->escapeHtml($ligacao->l_status); ?></td>
+            </tr>
+        </table>
+        <div ng-controller="fessCntrl">
+            <table class="table table-striped">
+                <tr>
+                    <th colspan="2"><strong>Notas:</strong></th>
+                </tr>
+                <?php foreach ($log as $res) { ?>
+                    <tr>
+                        <td colspan="2"><?php echo $res['ll_data']; ?> - <?php echo $res['ll_nota']; ?></td>
+                    </tr>
+                <?php } ?>
+            </table>
+        </div>
+    </div>
+</div>
+</div>

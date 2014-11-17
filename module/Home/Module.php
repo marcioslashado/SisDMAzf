@@ -9,6 +9,7 @@
 
 namespace Home;
 
+use Home\Model\HomeTable;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
@@ -24,6 +25,19 @@ class Module
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+    
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Home\Model\HomeTable' =>  function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new HomeTable($dbAdapter);
+                    return $table;
+                },
+            ),
+        );
     }
 
     public function getAutoloaderConfig()

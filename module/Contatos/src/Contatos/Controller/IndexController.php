@@ -13,7 +13,7 @@ use Zend\Db\Sql\Select;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Contatos\Model\Contatos;
-use Contatos\Form\ModulosForm;
+use Contatos\Form\ContatosForm;
 use Zend\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
@@ -38,6 +38,88 @@ class IndexController extends AbstractActionController
     {
         echo $this->getContatosTable()->getContatos();
         exit();
+    }
+    
+    public function addAction()
+    {
+        $form = new ContatosForm;
+        $request = $this->getRequest();
+        
+        if ($request->isPost()) {
+            $contato = new Contatos();
+            $form->setData($request->getPost());
+            $contato = $request->getPost();
+            
+            $view = new ViewModel(array(
+                'mensagem' => $this->getContatosTable()->saveContato($contato),
+                'form' => $form
+            ));
+            $view->setTemplate('contatos/index/add');
+            return $view;
+        }
+
+        $view = new ViewModel(array(
+            'form' => $form
+        ));
+        $view->setTemplate('contatos/index/add');
+        return $view;
+    }
+    
+    public function editAction() {
+        $id = (int)$this->params('form_codigo');
+        if (!$id) {
+            return $this->redirect()->toRoute('contatos', array('action'=>'add'));
+        }
+        $contato = $this->getContatosTable()->getContato($id);
+
+        $form = new ContatosForm();
+        $form->bind($contato);
+        
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            $contato = $request->getPost();
+            
+            $view = new ViewModel(array(
+                'mensagem' => $this->getContatosTable()->saveContato($contato),
+                'form_codigo' => $id,
+                'form' => $form,
+            ));
+            $view->setTemplate('contatos/index/edit');
+            return $view;
+        }
+        $view = new ViewModel(array(
+            'form_codigo' => $id,
+            'form' => $form,
+        ));
+       $view->setTemplate('contatos/index/edit');
+        return $view;
+    }
+    
+    public function delAction()
+    {
+        $id = (int)$this->params('form_codigo');
+        if (!$id) {
+            return $this->redirect()->toRoute('contatos');
+        }
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost()->get('del', 'Cancelar');
+            if ($del == 'Confirmar') {
+                $id = (int)$request->getPost()->get('form_codigo');
+                $this->getContatosTable()->deleteContato($id);
+            }
+            return $this->redirect()->toRoute('contatos');
+        }
+        
+        $contato = $this->getContatosTable()->getContato($id);
+        
+        $view = new ViewModel(array(
+            'form_codigo' => $id,
+            'contato' => $contato
+        ));
+        $view->setTemplate('contatos/index/del');
+        return $view;
     }
     
     public function indexAction()

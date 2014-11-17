@@ -22,10 +22,70 @@ class LigacoesForm extends Form {
         ));
 
         $this->add(array(
-            'name' => 'form_projeto',
+            'name' => 'form_origem',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'form_origem',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Membro da Equipe',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_destino',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'form_destino',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Contato da Ligação',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_assunto',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'form_destino',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Assunto desta ligação',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_data',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'datahora',
+                'class' => 'form-control input-sm',
+                'placeholder' => '',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_duracao',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'duracao',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Duração da ligação',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_nota',
+            'attributes' => array(
+                'type' => 'textarea',
+                'id' => 'nota',
+                'class' => 'form-control input-sm',
+                'placeholder' => '',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_status',
             'type' => 'Zend\Form\Element\Select',
             'attributes' => array(
-                'id' => 'projeto',
+                'id' => 'form_status',
                 'class' => 'form-control input-sm',
                 'required' => 'required',
             'value' => '', //Mantém selecionado o valor '1'
@@ -33,143 +93,11 @@ class LigacoesForm extends Form {
             'options' => array(
                 //'label' => 'Drop Down', 
                 'value_options' => array(
-                    '' => ':: Primeiro selecione um Órgão ::',
+                    'Realizado' => 'Realizado',
+                    'Remarcado' => 'Remarcado',
+                    'Pendente' => 'Pendente',
+                    'Cancelado' => 'Cancelado',
                 ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_elemento',
-            'type' => 'Zend\Form\Element\Select',
-            'attributes' => array(
-                'id' => 'elemento',
-                'class' => 'form-control input-sm',
-                'required' => 'required',
-            //'value' => '1', //Mantém selecionado o valor '1'
-            ),
-            'options' => array(
-                //'label' => 'Drop Down', 
-                'value_options' => array(
-                    '' => ':: Primeiro selecione um Projeto ::',
-                ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_fonte',
-            'type' => 'Zend\Form\Element\Select',
-            'attributes' => array(
-                'id' => 'fonte',
-                'class' => 'form-control input-sm',
-                'required' => 'required',
-            //'value' => '1', //Mantém selecionado o valor '1'
-            ),
-            'options' => array(
-                //'label' => 'Drop Down', 
-                'value_options' => array(
-                    '' => ':: Primeiro selecione um Elemento ::',
-                ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_execprev',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'e_execprev',
-                'class' => 'form-control input-sm',
-                'placeholder' => '000.000.000,00',
-                'disabled' => 'disabled',
-            ),
-        ));
-        
-        $this->add(array(
-            'name' => 'form_ExecOrcPlan',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'ExecOrcPlan',
-                'class' => 'form-control input-sm',
-                'placeholder' => '000.000.000,00',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_OrcExec',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'OrcExec',
-                'class' => 'form-control input-sm',
-                'placeholder' => '000.000.000,00',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_metaprev',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'metarealizada',
-                'class' => 'form-control input-sm',
-                'placeholder' => '0',
-                'disabled' => 'disabled',
-            ),
-        ));
-        
-        $this->add(array(
-            'name' => 'form_metarealizada',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'metarealizada',
-                'class' => 'form-control input-sm',
-                'placeholder' => '',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_mesano',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'mesano',
-                'class' => 'form-control input-sm',
-                'placeholder' => '06/2014',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_DesAc',
-            'attributes' => array(
-                'type' => 'textarea',
-                'id' => 'DesAc',
-                'class' => 'form-control',
-                'cols' => '40',
-                'rows' => '8',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_ResExec',
-            'attributes' => array(
-                'type' => 'textarea',
-                'id' => 'ResExec',
-                'class' => 'form-control',
-                'cols' => '40',
-                'rows' => '8',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            new Element\Button('adicionar'),
-            'name' => 'adicionar',
-            'attributes' => array(
-                'type' => 'submit',
-                'id' => 'adicionar',
-                'class' => 'btn btn-primary',
-                'value' => '<span class="glyphicon" data-icon="&#xe1dc;"></span> Adicionar',
             ),
         ));
     }

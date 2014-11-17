@@ -1,5 +1,4 @@
 <?php
-//$this->headLink()->prependStylesheet($this->basePath() . '/css/magic-bootstrap.css');
 $this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
 $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
 ?>            
@@ -15,7 +14,7 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
         }
     });
     app.controller('customersCrtl', function($scope, $http, $timeout) {
-        $http.get('<?php echo $this->url('listacontatos'); ?>').success(function(data) {
+        $http.get('<?php echo $this->url('contatos', array('action' => 'listacontatos')); ?>').success(function(data) {
             $scope.list = data;
             $scope.currentPage = 1; //current page
             $scope.entryLimit = 10; //max no of items to display in a page
@@ -37,152 +36,138 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
     });
 </script>
 <div class="col-md-6">
-                <div id="compromissos" class="table">
-                    <legend><span class="glyphicon" data-icon="N"></span> Agenda</legend>
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#c-hoje" data-toggle="tab" data-placement="top" data-original-title="Hoje"><span class="glyphicon" data-icon="N"></span> Hoje</a></li>
-                        <li class=""><a href="#c-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="N"></span> Esta Semana</a></li>
-                        <li class=""><a href="#c-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="N"></span> Este Mês</a></li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div class="tab-pane fade in active" id="c-hoje">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="datatable">
-                                    <thead>
-                                        <tr>
-                                            <th>Data/Hora</th>
-                                            <th>Responsável</th>
-                                            <th>Local</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>06/08/2014 às 16:59</td>
-                                            <td><a href="#">Fulano Etc</a></td>
-                                            <td>IPLANFOR</td>
-                                            <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade in" id="c-semana">
-                            <div class="table-responsive">
-                                <h1>SEMANA</h1>
-                            </div>
-                        </div> 
-                        <div class="tab-pane fade in" id="c-mes">
-                            <div class="table-responsive">
-                                <h1>MÊS</h1>
-                            </div>
-                        </div> 
-                    </div>
+    <div id="compromissos" class="table">
+        <legend><span class="glyphicon" data-icon="N"></span> Agenda</legend>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#c-hoje" data-toggle="tab" data-placement="top" data-original-title="Hoje"><span class="glyphicon" data-icon="N"></span> Hoje</a></li>
+<!--            <li class=""><a href="#c-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="N"></span> Esta Semana</a></li>
+            <li class=""><a href="#c-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="N"></span> Este Mês</a></li>-->
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="c-hoje">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Participantes</th>
+                                <th>Local</th>
+<!--                                <th></th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($this->agenda_dia as $res) { ?>
+                            <tr>
+                                <td><?php echo $res['start_date']; ?></td>
+                                <td><?php echo $res['convidados']; ?></td>
+                                <td><?php echo $res['event_location']; ?></td>
+<!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div id="ligacoes" class="table">
-                    <legend><span class="glyphicon" data-icon="&#xe16c;"></span> Ligações</legend>
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#l-hoje" data-toggle="tab" data-placement="top" data-original-title="Hoje"><span class="glyphicon" data-icon="&#xe16c;"></span> Hoje</a></li>
-                        <li class=""><a href="#l-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="&#xe16c;"></span> Esta Semana</a></li>
-                        <li class=""><a href="#l-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="&#xe16c;"></span> Este Mês</a></li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div class="tab-pane fade in active" id="l-hoje">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="datatable">
-                                    <thead>
-                                        <tr>
-                                            <th>Data/Hora</th>
-                                            <th>Responsável</th>
-                                            <th>Assunto</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>06/08/2014 às 16:59</td>
-                                            <td><a href="#">Fulano Etc</a></td>
-                                            <td>Assunto a ser Tratado</td>
-                                            <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade in" id="l-semana">
-                            <div class="table-responsive">
-                                <h1>SEMANA</h1>
-                            </div>
-                        </div> 
-                        <div class="tab-pane fade in" id="l-mes">
-                            <div class="table-responsive">
-                                <h1>MÊS</h1>
-                            </div>
-                        </div> 
-                    </div>
+            <div class="tab-pane fade in" id="c-semana">
+                <div class="table-responsive">
+                    <h1>SEMANA</h1>
                 </div>
-            </div>
-
-            <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myModalLabel">06/08/2014 às 16:59</h4>
-                        </div>
-                        <div class="modal-body">
-                            Conteúdo detalhado
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                        </div>
-                    </div>
+            </div> 
+            <div class="tab-pane fade in" id="c-mes">
+                <div class="table-responsive">
+                    <h1>MÊS</h1>
                 </div>
-            </div>
-
-<div ng-controller="customersCrtl" style="margin-bottom: 75px;">
-<div class="col-md-12">
-    <legend class="clearfix"><span class="glyphicon" data-icon="a"></span> Contatos <span class="pull-right" style="margin-bottom: -1px;"><input id="s-contatos" name="s-contatos" type="text" ng-model="search" ng-change="filter()" placeholder="Pesquise um dos campos" class="input-sm"></span></legend>
-    <div>
-    <div class="row">
-        <div class="col-md-12" ng-show="filteredItems > 0">
-            <table class="table table-striped table-bordered">
-            <thead>
-            <th>ID&nbsp;<a ng-click="sort_by('id_contato');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            <th>Nome&nbsp;<a ng-click="sort_by('nome_completo');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            <th>Sigla&nbsp;<a ng-click="sort_by('o_sigla');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            <th>Cargo&nbsp;<a ng-click="sort_by('cargo');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            <th>Telefone/Ramal&nbsp;<a ng-click="sort_by('fone');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            <th>Celular&nbsp;<a ng-click="sort_by('celular');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            <th>Email&nbsp;<a ng-click="sort_by('email');"><i class="glyphicon glyphicon-sort"></i></a></th>
-            </thead>
-            <tbody>
-                <tr ng-repeat="data in filtered = (list | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
-                    <td>{{data.id_contato}}</td>
-                    <td>{{data.nome_completo}}</td>
-                    <td>{{data.o_sigla}}</td>
-                    <td>{{data.cargo}}</td>
-                    <td>{{data.fone}} / {{data.ramal}}</td>
-                    <td>{{data.celular}}</td>
-                    <td>{{data.email}}</td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
-        <div class="col-md-12" ng-show="filteredItems == 0">
-            <div class="col-md-12">
-                <h4>Nenhum Resultado para sua Pesquisa</h4>
-            </div>
+            </div> 
         </div>
     </div>
 </div>
+
+<div class="col-md-6">
+    <div id="ligacoes" class="table">
+        <legend><span class="glyphicon" data-icon="&#xe16c;"></span> Ligações</legend>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#l-hoje" data-toggle="tab" data-placement="top" data-original-title="Hoje"><span class="glyphicon" data-icon="&#xe16c;"></span> Hoje</a></li>
+<!--            <li class=""><a href="#l-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="&#xe16c;"></span> Esta Semana</a></li>
+            <li class=""><a href="#l-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="&#xe16c;"></span> Este Mês</a></li>-->
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="l-hoje">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Responsável</th>
+                                <th>Assunto</th>
+<!--                                <th></th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($this->ligacoes_dia as $res) { ?>
+                            <tr>
+                                <td><?php echo $res['data_hora']; ?></td>
+                                <td><?php echo $res['membro']; ?></td>
+                                <td><?php echo $res['assunto']; ?></td>
+<!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade in" id="l-semana">
+                <div class="table-responsive">
+                    <h1>SEMANA</h1>
+                </div>
+            </div> 
+            <div class="tab-pane fade in" id="l-mes">
+                <div class="table-responsive">
+                    <h1>MÊS</h1>
+                </div>
+            </div> 
+        </div>
+    </div>
 </div>
+
+<div ng-controller="customersCrtl" style="margin-bottom: 75px;">
+    <div class="col-md-12">
+        <legend class="clearfix"><span class="glyphicon" data-icon="a"></span> Contatos <span class="pull-right" style="margin-bottom: -1px;"><input id="s-contatos" name="s-contatos" type="text" ng-model="search" ng-change="filter()" placeholder="Pesquise um dos campos" class="input-sm"></span></legend>
+        <div>
+            <div class="row">
+                <div class="col-md-12" ng-show="filteredItems > 0">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <th>ID&nbsp;<a ng-click="sort_by('id_contato');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Nome&nbsp;<a ng-click="sort_by('nome_completo');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Sigla&nbsp;<a ng-click="sort_by('o_sigla');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Cargo&nbsp;<a ng-click="sort_by('cargo');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Telefone/Ramal&nbsp;<a ng-click="sort_by('fone');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Celular&nbsp;<a ng-click="sort_by('celular');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Email&nbsp;<a ng-click="sort_by('email');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in filtered = (list| filter:search | orderBy : predicate :reverse) | startFrom:(currentPage - 1) * entryLimit | limitTo:entryLimit">
+                                <td>{{data.id_contato}}</td>
+                                <td>{{data.nome_completo}}</td>
+                                <td>{{data.o_sigla}}</td>
+                                <td>{{data.cargo}}</td>
+                                <td>{{data.fone}} / {{data.ramal}}</td>
+                                <td>{{data.celular}}</td>
+                                <td>{{data.email}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" ng-show="filteredItems == 0">
+                    <div class="col-md-12">
+                        <h4>Nenhum Resultado para sua Pesquisa</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

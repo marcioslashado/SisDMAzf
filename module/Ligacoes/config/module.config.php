@@ -37,53 +37,12 @@ return array(
     'router' => array(
         'routes' => array(
             'ligacoes' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'segment',
                 'options' => array(
-                    'route'    => '/',
+                    'route' => '/ligacoes[/:action][/:form_codigo]',
                     'defaults' => array(
                         'controller' => 'Ligacoes\Controller\Index',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-            
-            'listaligacoes' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/listaligacoes',
-                    'defaults' => array(
-                        'controller' => 'Ligacoes\Controller\Index',
-                        'action'     => 'listaligacoes',
-                    ),
-                ),
-            ),
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'ligacoes' => array(
-                'type'    => 'Literal',
-                'options' => array(
-                    'route'    => '/ligacoes',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Ligacoes\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
+                        'action' => 'index',
                     ),
                 ),
             ),

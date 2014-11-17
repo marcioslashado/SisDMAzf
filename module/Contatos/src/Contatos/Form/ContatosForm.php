@@ -11,7 +11,7 @@ class ContatosForm extends Form {
 
     public function __construct($name = null) {
         // we want to ignore the name passed
-        parent::__construct('metafisicas');
+        parent::__construct('contatos');
 
         $this->setAttribute('method', 'post');
         $this->add(array(
@@ -22,146 +22,73 @@ class ContatosForm extends Form {
         ));
 
         $this->add(array(
-            'name' => 'form_projeto',
-            'type' => 'Zend\Form\Element\Select',
-            'attributes' => array(
-                'id' => 'projeto',
-                'class' => 'form-control input-sm',
-                'required' => 'required',
-            'value' => '', //Mantém selecionado o valor '1'
-            ),
-            'options' => array(
-                //'label' => 'Drop Down', 
-                'value_options' => array(
-                    '' => ':: Primeiro selecione um Órgão ::',
-                ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_elemento',
-            'type' => 'Zend\Form\Element\Select',
-            'attributes' => array(
-                'id' => 'elemento',
-                'class' => 'form-control input-sm',
-                'required' => 'required',
-            //'value' => '1', //Mantém selecionado o valor '1'
-            ),
-            'options' => array(
-                //'label' => 'Drop Down', 
-                'value_options' => array(
-                    '' => ':: Primeiro selecione um Projeto ::',
-                ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_fonte',
-            'type' => 'Zend\Form\Element\Select',
-            'attributes' => array(
-                'id' => 'fonte',
-                'class' => 'form-control input-sm',
-                'required' => 'required',
-            //'value' => '1', //Mantém selecionado o valor '1'
-            ),
-            'options' => array(
-                //'label' => 'Drop Down', 
-                'value_options' => array(
-                    '' => ':: Primeiro selecione um Elemento ::',
-                ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_execprev',
+            'name' => 'form_nome',
             'attributes' => array(
                 'type' => 'text',
-                'id' => 'e_execprev',
+                'id' => 'nome_contato',
                 'class' => 'form-control input-sm',
-                'placeholder' => '000.000.000,00',
-                'disabled' => 'disabled',
+                'placeholder' => 'Nome Sobrenome',
+                'required' => 'required'
             ),
         ));
         
         $this->add(array(
-            'name' => 'form_ExecOrcPlan',
+            'name' => 'form_sigla',
             'attributes' => array(
                 'type' => 'text',
-                'id' => 'ExecOrcPlan',
+                'id' => 'nome_sigla',
                 'class' => 'form-control input-sm',
-                'placeholder' => '000.000.000,00',
-                'required' => 'required',
+                'placeholder' => 'IPLANFOR, IFAN, etc'
             ),
         ));
-
         $this->add(array(
-            'name' => 'form_OrcExec',
+            'name' => 'form_cargo',
             'attributes' => array(
                 'type' => 'text',
-                'id' => 'OrcExec',
+                'id' => 'nome_cargo',
                 'class' => 'form-control input-sm',
-                'placeholder' => '000.000.000,00',
-                'required' => 'required',
+                'placeholder' => 'Diretor, Gerente, etc'
             ),
         ));
-
         $this->add(array(
-            'name' => 'form_metaprev',
+            'name' => 'form_telefone',
             'attributes' => array(
                 'type' => 'text',
-                'id' => 'metarealizada',
+                'id' => 'nome_telefone',
                 'class' => 'form-control input-sm',
-                'placeholder' => '0',
-                'disabled' => 'disabled',
+                'placeholder' => '(99) 9999-9999', 
+                'required' => 'required'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_ramal',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'form_ramal',
+                'class' => 'form-control input-sm',
+                'placeholder' => '9999/9999/9999'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_celular',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'nome_celular',
+                'class' => 'form-control input-sm',
+                'placeholder' => '(99) 9999-9999'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_email',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'nome_email',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'email@provedor.com', 
+                'required' => 'required'
             ),
         ));
         
-        $this->add(array(
-            'name' => 'form_metarealizada',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'metarealizada',
-                'class' => 'form-control input-sm',
-                'placeholder' => '',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_mesano',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'mesano',
-                'class' => 'form-control input-sm',
-                'placeholder' => '06/2014',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_DesAc',
-            'attributes' => array(
-                'type' => 'textarea',
-                'id' => 'DesAc',
-                'class' => 'form-control',
-                'cols' => '40',
-                'rows' => '8',
-                'required' => 'required',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'form_ResExec',
-            'attributes' => array(
-                'type' => 'textarea',
-                'id' => 'ResExec',
-                'class' => 'form-control',
-                'cols' => '40',
-                'rows' => '8',
-                'required' => 'required',
-            ),
-        ));
-
         $this->add(array(
             new Element\Button('adicionar'),
             'name' => 'adicionar',

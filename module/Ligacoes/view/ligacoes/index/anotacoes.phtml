@@ -1,0 +1,52 @@
+<?php
+$title = 'Adicionando Anotação';
+$this->headTitle($title);
+
+?>
+<div class="container-fluid">
+    <div class="table-responsive">
+        <?php
+        $form = $this->form;
+        $form->setAttribute('action', $this->url('ligacoes', array('action' => 'anotacoes', 'form_codigo' => $this->form_codigo)));
+        $form->prepare();
+        echo $this->form()->openTag($form) . PHP_EOL;
+        ?>
+        <legend><?php echo $this->escapeHtml($title); ?></legend>
+        <?php echo $this->formHidden($form->get('form_codigo')) . PHP_EOL; ?>
+        <?php if ($this->mensagem) { ?>
+            <div style="margin-top:10px;"><div class="alert alert-success">Anotação registrada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('ligacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Ligações</a></div></div>
+        <?php } ?>
+
+                <div class='row'>
+                    <div class="col-md-4">
+                        <label class="control-label" for="status">Status</label>
+                        <?php echo $this->formRow($form->get('form_status')) . PHP_EOL; ?>
+                        <span class="help-block">Status da Ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
+                    </div>
+                    <div class="col-md-4">
+                        <label class="control-label" for="duracao">Duração</label>
+                        <?php echo $this->formRow($form->get('form_duracao')) . PHP_EOL; ?>
+                        <span class="help-block">Caso aplicável <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Caso a ligação tenha sido realizada, digite, em minutos, a duração desta ligação"> <span class="glyphicon" data-icon=""></span></a></span>  
+                    </div>                                
+                    <div class="col-md-4">
+                        <label class="control-label clearfix" for="destinatario">&nbsp;</label>
+                        <div class="checkbox">
+                            <label><input name="marcar_agenda" type="checkbox"> Marcar na Agenda</label>
+                        </div>
+                        <span class="help-block">Marcar compromisso na Agenda <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <label class="control-label" for="assunto">Nota:</label>
+                        <?php echo $this->formRow($form->get('form_nota')) . PHP_EOL; ?>
+                        <span class="help-block">Descreva a ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
+                    </div>
+                </div>
+
+        <div class="col-md-12">
+            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Adicionar</button>
+        </div>
+        <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
+    </div>
+</div>

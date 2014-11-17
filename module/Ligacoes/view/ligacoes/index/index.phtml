@@ -1,6 +1,4 @@
 <?php
-$this->headLink()->prependStylesheet($this->basePath() . '/css/jquery.datetimepicker.css');
-$this->headScript()->prependFile($this->basePath() . '/js/jquery.datetimepicker.js');
 $this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
 $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
 ?>  
@@ -28,7 +26,7 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
         }
     });
     app.controller('customersCrtl', function($scope, $http, $timeout) {
-        $http.get('<?php echo $this->url('listaligacoes'); ?>').success(function(data) {
+        $http.get('<?php echo $this->url('ligacoes', array('action' => 'listaligacoes')); ?>').success(function(data) {
             $scope.list = data;
             $scope.currentPage = 1; //current page
             $scope.entryLimit = 10; //max no of items to display in a page
@@ -50,92 +48,6 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
     });
 
 </script>
-<!-- Modal Detalhes -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Agendar Ligação</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-striped">
-                    <tr>
-                        <th><strong>De:</strong></th>
-                        <td>Membro</td>
-                    </tr>
-                    <tr>
-                        <th><strong>Para:</strong></th>
-                        <td>Destinatário</td>
-                    </tr>
-                    <tr>
-                        <th><strong>Assunto:</strong></th>
-                        <td>Ligar por algum motivo</td>
-                    </tr>
-                    <tr>
-                        <th><strong>Horário:</strong></th>
-                        <td>10/10/2014 às 15:00</td>
-                    </tr>
-                    <tr>
-                        <th><strong>Status:</strong></th>
-                        <td>Pendente</td>
-                    </tr>
-                    <tr>
-                        <th colspan="2"><strong>Notas:</strong></th>
-                    </tr>
-                    <tr>
-                        <td colspan="2">12/12/2012 - Status mudou para Realizado <br> 12/12/2012 - Mais notas abaixo</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Form ADD -->
-<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="ModalAddLabel" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
-                <h4 class="modal-title" id="myModalLabel">Agendando nova Ligação</h4>
-            </div>
-            <div class="modal-body">
-                <div class='row'>
-                    <div class="col-md-6">
-                        <label class="control-label" for="membro">Origem/Membro</label>
-                        <input name="membro" type="text" id="membro" class="form-control&#x20;input-sm" placeholder="Digite o nome do membro" required="required" value="">
-                        <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
-                    </div>
-                    <div class="col-md-6">
-                        <label class="control-label" for="destinatario">Destinatário</label>
-                        <input name="destinatario" type="text" id="destinatario" class="form-control&#x20;input-sm" placeholder="Para quem a ligação será realizada?" required="required" value="">
-                        <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
-                    </div>
-                </div>
-                <div class='row'>
-                    <div class="col-md-7">
-                        <label class="control-label" for="assunto">Assunto</label>
-                        <input name="assunto" type="text" id="assunto" class="form-control&#x20;input-sm" placeholder="Assunto da ligação" required="required" value="">
-                        <span class="help-block">Assunto da Ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
-                    </div>
-                    <div class="col-md-5">
-                        <label class="control-label" for="datahora">Data/Horário</label>
-                        <input name="datahora" type="text" id="datahora" class="form-control&#x20;input-sm" placeholder="Data/Horário" required="required" value="">
-                        <span class="help-block">Selecione a Data/Hora <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Selecione a Data/Hora que esta ligação deverá ser realizada"> <span class="glyphicon" data-icon=""></span></a></span>  
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Agendar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal Notas -->
 <div class="modal fade" id="ModalNotas" tabindex="-1" role="dialog" aria-labelledby="ModalNotasLabel" aria-hidden="true" data-backdrop="static">
@@ -189,9 +101,8 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
 <div class="col-md-12">
     <legend class="clearfix">
         <span class="glyphicon" data-icon="a"></span> Ligações 
-        <a class="btn-sm btn-primary" href="#" data-target="#ModalAdd" data-toggle="modal" data-placement="left" data-original-title="Agendar Ligação"><span data-icon="&#xe03e;" class="glyphicon"></span> Adicionar</a> 
+        <a class="btn-sm btn-primary" href="<?php echo $this->url('ligacoes', array('action' => 'add')); ?>" data-placement="left" data-original-title="Adicionar Contato"><span data-icon="&#xe03e;" class="glyphicon"></span> Adicionar</a> 
     </legend>
-    <div class="alert alert-success">Ligação agendada com sucesso!</div>
 </div>
 
 <div class="col-md-12"> 
@@ -239,9 +150,10 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
                                 <td ng-if="data.status_ligacao == 'Remarcado'"><span class="badge badge-warning">Remarcado</span></td>
                                 <td ng-if="data.status_ligacao == 'Cancelado'"><span class="badge badge-important">Cancelado</span></td>
                                 <td class="text-right">
-                                    <a href="#" data-target="#myModal" data-toggle="modal" data-placement="left" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a>
-                                    <a href="#" data-target="#ModalNotas" data-toggle="modal" data-placement="left" data-original-title="Adicionar anotações"><span class="glyphicon" data-icon="&#xe04b;"></span></a>
-                                    <a href="#" data-toggle="tooltip" data-placement="left" data-original-title="Cancelar"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
+                                    <a href="<?php echo $this->url('ligacoes', array('action' => 'view', 'form_codigo')); ?>/{{data.id_ligacao}}" data-placement="left" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a>
+                                    <a href="<?php echo $this->url('ligacoes', array('action' => 'anotacoes', 'form_codigo')); ?>/{{data.id_ligacao}}" data-placement="left" data-original-title="Adicionar anotações"><span class="glyphicon" data-icon="&#xe04b;"></span></a>
+                                    <a href="<?php echo $this->url('ligacoes', array('action' => 'edit', 'form_codigo')); ?>/{{data.id_ligacao}}" data-toggle="tooltip" data-placement="left" data-original-title="Editar"><span class="glyphicon" data-icon=""></span></a>
+                                    <a href="<?php echo $this->url('ligacoes', array('action' => 'del', 'form_codigo')); ?>/{{data.id_ligacao}}" data-toggle="tooltip" data-placement="left" data-original-title="Cancelar"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
                                 </td>
                             </tr>
                         </tbody>
