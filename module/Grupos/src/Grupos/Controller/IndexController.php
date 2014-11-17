@@ -152,14 +152,12 @@ class IndexController extends AbstractActionController {
         if ($request->isPost()) {
             $del = $request->getPost()->get('del', 'Cancelar');
             if ($del == 'Confirmar') {
-                $id = (int) $request->getPost()->get('u_id');
+                $id = (int) $request->getPost()->get('form_grupos');
                 $this->getGruposTable()->deleteGrupo($id);
             }
             return $this->redirect()->toRoute('grupos');
         }
-
         $grupos = $this->getGruposTable()->getPermissions($id);
-
         $view = new ViewModel(array(
             'form_grupos' => $id,
             'grupos' => $grupos
