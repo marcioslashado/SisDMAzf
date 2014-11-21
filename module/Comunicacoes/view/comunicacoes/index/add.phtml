@@ -1,0 +1,88 @@
+<?php
+$this->headLink()->prependStylesheet($this->basePath() . '/css/jquery.datetimepicker.css');
+$this->headScript()->prependFile($this->basePath() . '/js/jquery.datetimepicker.js');
+echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/jqueryui-multisearch.js')
+        ->prependFile($this->basePath() . '/js/lodash.underscore.min.js')
+        ->prependFile($this->basePath() . '/js/jquery-ui.js');
+?>  
+<script>
+    $(document).ready(function () {
+        jQuery('#datahora').datetimepicker({
+            format: 'Y-m-d H:i:s',
+            inline: true,
+            lang: 'pt'
+        });
+    });
+</script>
+<?php
+$title = 'Agendando Comunicação';
+$this->headTitle($title);
+?>
+<div class="container-fluid">
+    <div class="table-responsive">
+        <?php
+        $form = $this->form;
+        $form->setAttribute('action', $this->url('comunicacoes', array('action' => 'add')));
+        $form->prepare();
+        echo $this->form()->openTag($form) . PHP_EOL;
+        ?>
+        <legend><?php echo $this->escapeHtml($title); ?></legend>
+        <?php echo $this->formHidden($form->get('form_codigo')) . PHP_EOL; ?>
+        <?php if ($this->mensagem) { ?>
+            <div style="margin-top:10px;"><div class="alert alert-success">Comunicação agendada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('comunicacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Comunicações</a></div></div>
+        <?php } ?>
+
+        <div class='row'>
+            <div class="col-md-2">
+                <label class="control-label" for="membro">Status</label>
+                <?php echo $this->formRow($form->get('form_status')) . PHP_EOL; ?>
+                <span class="help-block">Status deste Contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-2">
+                <label class="control-label" for="membro">Tipo</label>
+                <?php echo $this->formRow($form->get('form_tipo')) . PHP_EOL; ?>
+                <span class="help-block">Tipo de Comunicação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-4">
+                <label class="control-label" for="membro">Projeto</label>
+                <?php echo $this->formRow($form->get('form_projeto')) . PHP_EOL; ?>
+                <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-4">
+                <label class="control-label" for="membro">Etapa</label>
+                <?php echo $this->formRow($form->get('form_etapas')) . PHP_EOL; ?>
+                <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label" for="membro">Origem/Membro</label>
+                <?php echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
+                <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-6">
+                <label class="control-label" for="destinatario">Destino/Contato</label>
+                <?php echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
+                <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-md-9">
+                <label class="control-label" for="assunto">Assunto</label>
+                <?php echo $this->formRow($form->get('form_assunto')) . PHP_EOL; ?>
+                <span class="help-block">Assunto da Ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-3">
+                <label class="control-label" for="datahora">Data/Horário</label>
+                <?php echo $this->formRow($form->get('form_data')) . PHP_EOL; ?>
+                <span class="help-block">Selecione a Data/Hora <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Selecione a Data/Hora que esta ligação deverá ser realizada"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Agendar</button>
+        </div>
+        <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
+    </div>
+</div>

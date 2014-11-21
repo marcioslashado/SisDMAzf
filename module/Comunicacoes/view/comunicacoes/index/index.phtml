@@ -1,0 +1,120 @@
+<?php
+$this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
+$this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
+?>  
+
+<script>
+    var app = angular.module('myApp', ['ui.bootstrap']);
+    app.filter('startFrom', function() {
+        return function(input, start) {
+            if (input) {
+                start = +start; //parse to int
+                return input.slice(start);
+            }
+            return [];
+        }
+    });
+    app.controller('customersCrtl', function($scope, $http, $timeout) {
+        $http.get('<?php echo $this->url('comunicacoes', array('action' => 'listacomunicacoes')); ?>').success(function(data) {
+            $scope.list = data;
+            $scope.currentPage = 1; //current page
+            $scope.entryLimit = 10; //max no of items to display in a page
+            $scope.filteredItems = $scope.list.length; //Initially for no filter  
+            $scope.totalItems = $scope.list.length;
+        });
+        $scope.setPage = function(pageNo) {
+            $scope.currentPage = pageNo;
+        };
+        $scope.filter = function() {
+            $timeout(function() {
+                $scope.filteredItems = $scope.filtered.length;
+            }, 10);
+        };
+        $scope.sort_by = function(predicate) {
+            $scope.predicate = predicate;
+            $scope.reverse = !$scope.reverse;
+        };
+    });
+
+</script>
+
+<div class="col-md-12">
+    <legend class="clearfix">
+        <span class="glyphicon" data-icon="a"></span> Comunicações 
+        <a class="btn-sm btn-primary" href="<?php echo $this->url('comunicacoes', array('action' => 'add')); ?>" data-placement="left" data-original-title="Adicionar Comunicação"><span data-icon="&#xe03e;" class="glyphicon"></span> Adicionar</a> 
+    </legend>
+</div>
+
+<div class="col-md-12"> 
+    <div ng-controller="customersCrtl" style="margin-bottom: 75px;">
+        <div>
+            <div class="row">
+                <div class="col-md-2">Registros por página:
+                    <select ng-model="entryLimit" class="form-control">
+                        <option>5</option>
+                        <option>10</option>
+                        <option>20</option>
+                        <option>50</option>
+                        <option>100</option>
+                    </select>
+                </div>
+                <div class="col-md-3">Pesquisa:
+                    <input type="text" ng-model="search" ng-change="filter()" placeholder="Pesquise um dos campos" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <h5>Exibindo {{ filtered.length}} de {{ totalItems}} contatos</h5>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12" ng-show="filteredItems > 0">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <th>ID&nbsp;<a ng-click="sort_by('id_comunicacao');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Remetente&nbsp;<a ng-click="sort_by('remetente');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Destinatário&nbsp;<a ng-click="sort_by('destinatario');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Tipo&nbsp;<a ng-click="sort_by('tipo_comunicacao');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Projeto&nbsp;<a ng-click="sort_by('projeto');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Etapa&nbsp;<a ng-click="sort_by('etapa');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Descrição&nbsp;<a ng-click="sort_by('descricao_comunicacao');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Data/Hora&nbsp;<a ng-click="sort_by('data_comunicacao');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th>Status&nbsp;<a ng-click="sort_by('status_comunicacao');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in filtered = (list| filter:search | orderBy : predicate :reverse) | startFrom:(currentPage - 1) * entryLimit | limitTo:entryLimit">
+                                <td>{{data.id_comunicacao}}</td>
+                                <td>{{data.remetente}} <a href="#" data-placement="bottom" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a></td>
+                                <td>{{data.destinatario}} <a href="#" data-placement="bottom" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a></td>
+                                <td ng-if="data.tipo_comunicacao == '1'">Enviado <i class="glyphicon glyphicon-send"></i></td>
+                                <td ng-if="data.tipo_comunicacao == '2'">Recebido <i class="glyphicon glyphicon-cloud-download"></i></td>
+                                <td>{{data.projeto}}</td>
+                                <td>{{data.etapa}}</td>
+                                <td>{{data.descricao_comunicacao}}</td>
+                                <td>{{data.data_comunicacao}}</td>
+                                <td ng-if="data.status_comunicacao == 'Realizado'"><span class="badge badge-success">Realizado</span></td>
+                                <td ng-if="data.status_comunicacao == 'Pendente'"><span class="badge badge-warning">Pendente</span></td>
+                                <td ng-if="data.status_comunicacao == 'Remarcado'"><span class="badge badge-warning">Remarcado</span></td>
+                                <td ng-if="data.status_comunicacao == 'Cancelado'"><span class="badge badge-important">Cancelado</span></td>
+                                <td class="text-right">
+                                    <a href="<?php echo $this->url('comunicacoes', array('action' => 'view', 'form_codigo')); ?>/{{data.id_comunicacao}}" data-placement="bottom" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a>
+                                    <a href="<?php echo $this->url('comunicacoes', array('action' => 'anotacoes', 'form_codigo')); ?>/{{data.id_comunicacao}}" data-placement="bottom" data-original-title="Adicionar anotações"><span class="glyphicon" data-icon="&#xe04b;"></span></a>
+                                    <a href="<?php echo $this->url('comunicacoes', array('action' => 'edit', 'form_codigo')); ?>/{{data.id_comunicacao}}" data-toggle="tooltip" data-placement="bottom" data-original-title="Editar"><span class="glyphicon" data-icon=""></span></a>
+                                    <a href="<?php echo $this->url('comunicacoes', array('action' => 'del', 'form_codigo')); ?>/{{data.id_comunicacao}}" data-toggle="tooltip" data-placement="bottom" data-original-title="Cancelar"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" ng-show="filteredItems == 0">
+                    <div class="col-md-12">
+                        <h4>Nenhum Resultado para sua Pesquisa</h4>
+                    </div>
+                </div>
+                <div class="col-md-12" ng-show="filteredItems > 0">    
+                    <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

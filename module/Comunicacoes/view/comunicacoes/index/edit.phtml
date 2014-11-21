@@ -6,54 +6,40 @@ $this->headScript()->prependFile($this->basePath() . '/js/jquery.datetimepicker.
     $(document).ready(function() {
         jQuery('#datahora').datetimepicker({
             format: 'Y-m-d H:i:s',
+            allowTimes: ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+                '16:00', '16:30', '17:00', '17:30'],
             inline: true,
             lang: 'pt'
         });
     });
 </script>
 <?php
-$title = 'Agendando ligação';
+$title = 'Editando Ligação';
 $this->headTitle($title);
+
 ?>
 <div class="container-fluid">
     <div class="table-responsive">
         <?php
         $form = $this->form;
-        $form->setAttribute('action', $this->url('ligacoes', array('action' => 'add')));
+        $form->setAttribute('action', $this->url('ligacoes', array('action' => 'edit', 'form_codigo' => $this->form_codigo)));
         $form->prepare();
         echo $this->form()->openTag($form) . PHP_EOL;
         ?>
         <legend><?php echo $this->escapeHtml($title); ?></legend>
         <?php echo $this->formHidden($form->get('form_codigo')) . PHP_EOL; ?>
         <?php if ($this->mensagem) { ?>
-            <div style="margin-top:10px;"><div class="alert alert-success">Ligação agendada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('ligacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Ligações</a></div></div>
+            <div style="margin-top:10px;"><div class="alert alert-success">Ligação editada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('ligacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Ligações</a></div></div>
         <?php } ?>
 
         <div class='row'>
-            <div class="col-md-2">
-                <label class="control-label" for="membro">Status</label>
-                <select>
-                    <option>Realizado</option>
-                    <option>Remarcado</option>
-                    <option>Pendente</option>
-                    <option>Cancelado</option>
-                </select>
-                <span class="help-block">.......... <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
-            </div>
-            <div class="col-md-2">
-                <label class="control-label" for="membro">Tipo</label>
-                <select>
-                    <option>Entrada</option>
-                    <option>Saída</option>
-                </select>
-                <span class="help-block">....... <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label class="control-label" for="membro">Origem/Membro</label>
                 <?php echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label class="control-label" for="destinatario">Destinatário</label>
                 <?php echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
                 <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
@@ -73,7 +59,7 @@ $this->headTitle($title);
         </div>
 
         <div class="col-md-12">
-            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Agendar</button>
+            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Editar</button>
         </div>
         <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
     </div>

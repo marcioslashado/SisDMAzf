@@ -1,7 +1,21 @@
 <?php
+echo $this->headLink()
+        ->prependStylesheet($this->basePath() . '/css/multiple-select.css');
+echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/jquery.multiple.select.js');
+?>
+<?php
 $title = 'Editando Grupo/Regras';
 $this->headTitle($title);
 ?>
+<script>
+    $("#grupo_modulo").multipleSelect({
+        multiple: false, //opções horizontais/em linha ou vertical
+        placeholder: 'Selecione os Módulos e suas Funções/Ações',
+        multipleWidth: '100%',
+        width: '100%'
+    });
+</script>
 <div class="container-fluid">
     <div class="table-responsive">
         <?php
@@ -21,10 +35,10 @@ $this->headTitle($title);
             <?php echo $this->formRow($form->get('grupo_titulo')) . PHP_EOL; ?>
             <span class="help-block">Nome do Grupo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite um nome de exibição para este grupo/regra."> <span class="glyphicon" data-icon=""></span></a></span>  
         </div>
-            
+
         <div class="col-md-2">
             <label class="control-label" for="modulo_status">Status *</label>
-                <?php echo $this->formRow($form->get('modulo_status')) . PHP_EOL; ?>
+            <?php echo $this->formRow($form->get('modulo_status')) . PHP_EOL; ?>
             <span class="help-block">Situação do Módulo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Selecione um status."> <span class="glyphicon" data-icon=""></span></a></span>  
         </div>
 
@@ -42,12 +56,12 @@ $this->headTitle($title);
     </div>
 </div>
 
-    <script src="jquery.multiple.select.js"></script>
-    <script>
-        $("#grupo_modulo").multipleSelect({
-            multiple: false,
-            placeholder: 'Selecione os Módulos e suas Funções/Ações',
-            multipleWidth: '100%',
-            width: '100%'
-        });
-    </script>
+<script src="jquery.multiple.select.js"></script>
+<script>
+    $("#grupo_modulo").multipleSelect({
+        multiple: false,
+        placeholder: 'Selecione os Módulos e suas Funções/Ações',
+        multipleWidth: '100%',
+        width: '100%'
+    });
+</script>

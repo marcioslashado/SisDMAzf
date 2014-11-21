@@ -1,7 +1,22 @@
 <?php
+echo $this->headLink()
+        ->prependStylesheet($this->basePath() . '/css/multiple-select.css');
+echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/jquery.multiple.select.js');
+?>
+<?php
 $title = 'Adicionando novo Grupo/Regras';
 $this->headTitle($title);
 ?>
+    <script>
+        $("#grupo_modulo").multipleSelect({
+            multiple: false, //opções horizontais/em linha ou vertical
+            placeholder: 'Selecione os Módulos e suas Funções/Ações',
+            multipleWidth: '100%',
+            width: '100%'
+        });
+    </script>
+    
 <div class="container-fluid">
     <div class="table-responsive">
         <?php

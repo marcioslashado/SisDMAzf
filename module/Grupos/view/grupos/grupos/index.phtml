@@ -46,8 +46,8 @@ $url_order = 'ASC';  // the following lines
                         </td>
                         <td><?php echo $status; ?></td>
                         <td>
-                            <a href="<?php echo $this->url('grupos', array('action' => 'grupo-edit', 'form_grupos' => $grupos->r_rid)); ?>" data-toggle="tooltip" data-placement="left" data-original-title="Editar"><span class="glyphicon" data-icon=""></span></a>
-                            <a href="<?php echo $this->url('grupos', array('action' => 'grupo-del', 'form_grupos' => $grupos->r_rid)); ?>" data-toggle="tooltip" data-placement="left" data-original-title="Excluir"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
+                            <a href="<?php echo $this->url('grupos', array('action' => 'grupo-edit', 'form_grupos' => $grupos->r_rid)); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Editar"><span class="glyphicon" data-icon=""></span></a>
+                            <a href="<?php echo $this->url('grupos', array('action' => 'grupo-del', 'form_grupos' => $grupos->r_rid)); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Excluir"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

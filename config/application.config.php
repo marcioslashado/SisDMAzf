@@ -8,6 +8,7 @@ return array(
         'Home',
         'Contatos',
         'Ligacoes',
+        'Comunicacoes',
         'Grupos',
         'Agenda',
     ),
