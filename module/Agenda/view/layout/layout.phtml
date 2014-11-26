@@ -38,10 +38,10 @@
                 $("[name='situacao-membro']").on('switchChange.bootstrapSwitch', function(event, state) {
                     var userId = $(this).attr('id');
                     var status = state; // TRUE OR FALSE
-                    alert(userId +' - '+ status);
+                    //alert(userId +' - '+ status);
                     $.ajax({
-                        url: '#',
-                        //url: '<?php echo $this->url('agenda', array('action' => 'update-user')); ?>', //
+                        //url: '#',
+                        url: '<?php echo $this->url('home', array('action' => 'update-user')); ?>',
                         type: "POST",
                         data: {userId: userId, status: status},
                         success: function(data) {
@@ -74,23 +74,6 @@
         </script>
     </head>
     <body onload="init();">
-        <?php if (isset($_SESSION['User']['userId'])) { ?>
-            <nav>
-                <div class="navbar-header pull-right">
-                    <a id="nav-expander" class="nav-expander fixed">
-                        <span class="glyphicon" data-icon="&#xe0a5;"></span>
-                    </a>
-                </div>
-                <ul class="list-unstyled main-menu">
-                    <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="1" data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-                    <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="2" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-                    <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="3" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-                    <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="4" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-                    <li class="clearfix"><span class="pull-left">Nome Sobrenome</span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="5" checked data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-                </ul>
-            </nav>
-        <?php } ?>
-
         <!-- Fixed navbar -->
         <div class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
@@ -108,7 +91,7 @@
                         <ul class="nav navbar-nav">
                             <li><a class="flat-button-label" href="<?php echo $this->url('home'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="&#xe1d5;"></span> Início</a></li>
                             <li><a class="flat-button-label" href="<?php echo $this->url('contatos'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Contatos"> <span class="glyphicon" data-icon="a"></span> Contatos</a></li>
-                            <li><a class="flat-button-label" href="<?php echo $this->url('ligacoes'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Ligações"> <span class="glyphicon" data-icon="&#xe16c;"></span> Ligações</a></li>
+                            <li><a class="flat-button-label" href="<?php echo $this->url('comunicacoes'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Comunicações"> <span class="glyphicon" data-icon="&#xe16c;"></span> Comunicações</a></li>
                             <li><a class="flat-button-label" href="<?php echo $this->url('agenda'); ?>" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Agenda"> <span class="glyphicon" data-icon="N"></span> Agenda</a></li>
     <!--                        <li><a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="H"></span> Dossiês</a></li>
                             <li><a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ir para Página Inicial"> <span class="glyphicon" data-icon="&#xe17e;"></span> Relatórios</a></li>-->
@@ -144,7 +127,7 @@
 
         <div id="footer">
             <div class="container-fluid">
-                <img src="img/logo_menor.png" width="45" height="45" style="float:left; margin: 5px;">
+                <img src="<?php echo $this->basePath() . '/img/logo_menor.png'; ?>" width="45" height="45" style="float:left; margin: 5px;">
                 <div style="float: left;">
                     <p class="text-muted">
                         IPLANFOR - Instituto de Planejamento de Fortaleza <br>
@@ -152,7 +135,7 @@
                         Fone/Fax: (85)3105-1354 | iplanfor@fortaleza.ce.gov.br<br>
                     </p>
                 </div>
-                <div id="desenvolvedor" style="float: right; text-align: right; display: none;"><p class="text-muted">Dev.: Marcio Seabra <br> Ver.: 1.0</p></div>
+                <div id="desenvolvedor" style="float: right; text-align: right;"><p class="text-muted">Dev.: Marcio Seabra <br> Ver.: 1.0</p></div>
             </div>
         </div>
         <div class="precarregar"></div>

@@ -28,6 +28,7 @@ class UserController extends AbstractActionController
 
     protected $usersTable;
     protected $gruposTable;
+    protected $homeTable;
     protected $storage;
 
     protected $authservice;
@@ -40,6 +41,26 @@ class UserController extends AbstractActionController
      * @access Public
      * @return Object ViewModel
      */
+    
+    public function getHomeTable() {
+        if (!$this->homeTable) {
+            $sm = $this->getServiceLocator();
+            $this->homeTable = $sm->get('Home\Model\HomeTable');
+        }
+        return $this->homeTable;
+    }
+
+    public function updateUserAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $user = $request->getPost();
+            //print_r($user);
+            $this->getHomeTable()->updateUser($user);
+            exit();
+        }
+        exit();
+    }
+    
     public function indexAction()
     {
         $config = $this->getServiceLocator()->get('Config');
@@ -503,6 +524,7 @@ class UserController extends AbstractActionController
             'order' => $order,
             'page' => $page,
             'paginator' => $paginator,
+            'users' => $this->getHomeTable()->getUsers(),
         ));
         $view->setTemplate('users/user/usuarios');
         return $view;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -15,41 +16,46 @@ use Zend\View\Model\ViewModel;
 use Home\Model\HomeTable;
 use Zend\View\Model\JsonModel;
 
-class IndexController extends AbstractActionController
-{
-    protected $agendaTable;
-    protected $ligacoesTable;
-    
+class IndexController extends AbstractActionController {
+
+    protected $homeTable;
+
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
         $this->headTitleHelper = $this->getServiceLocator()->get('viewHelperManager')->get('headTitle');
         $this->headTitleHelper->append('Página Inicial');
-        
+
         parent::onDispatch($e);
     }
 
-    public function getAgendaTable() {
-        if (!$this->agendaTable) {
+    public function getHomeTable() {
+        if (!$this->homeTable) {
             $sm = $this->getServiceLocator();
-            $this->agendaTable = $sm->get('Home\Model\HomeTable');
+            $this->homeTable = $sm->get('Home\Model\HomeTable');
         }
-        return $this->agendaTable;
-    }
-    
-    public function getLigacoesTable() {
-        if (!$this->ligacoesTable) {
-            $sm = $this->getServiceLocator();
-            $this->ligacoesTable = $sm->get('Home\Model\HomeTable');
-        }
-        return $this->ligacoesTable;
+        return $this->homeTable;
     }
 
-    public function indexAction()
-    {          
-            $view = new ViewModel(array(
-                'agenda_dia' => $this->getAgendaTable()->getAgenda(),
-                'ligacoes_dia' => $this->getAgendaTable()->getLigacoes(),
-            ));
-            $view->setTemplate('home/index/index');
-            return $view;
+    public function updateUserAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $user = $request->getPost();
+            //print_r($user);
+            $this->getHomeTable()->updateUser($user);
+            exit();
+        }
+        exit();
     }
+
+    public function indexAction() {
+        $date = new \DateTime();
+        $view = new ViewModel(array(
+            'agenda_dia' => $this->getHomeTable()->getAgenda(),
+            'ligacoes_dia' => $this->getHomeTable()->getLigacoes(),
+            'users' => $this->getHomeTable()->getUsers(),
+            'date' => $date->format('Y-m-d H:i:s'),
+        ));
+        $view->setTemplate('home/index/index');
+        return $view;
+    }
+
 }

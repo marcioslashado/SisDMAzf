@@ -457,6 +457,22 @@ echo $this->headScript()
                 });
     }
 </script>
+
+        <?php if (isset($_SESSION['User']['userId'])) { ?>
+            <nav>
+                <div class="navbar-header pull-right">
+                    <a id="nav-expander" class="nav-expander fixed">
+                        <span class="glyphicon" data-icon="&#xe0a5;"></span>
+                    </a>
+                </div>
+                <ul class="list-unstyled main-menu">
+                    <?php foreach ($this->users as $res) { ?>
+                        <li class="clearfix"><span class="pull-left"><?php echo $res['nome']." ".$res['sobrenome']; ?></span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="<?php echo $res['id']; ?>" <?php if($res['status'] == "Active"){echo "checked";} ?> data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+                    <?php } ?>
+                </ul>
+            </nav>
+        <?php } ?>
+
 <div id="scheduler_here" class="dhx_cal_container container" style='width:100%; height:85%;'>
     <div class="dhx_cal_navline">
         <div class="dhx_cal_prev_button">&nbsp;</div>

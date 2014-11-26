@@ -19,11 +19,31 @@ use Zend\View\Model\JsonModel;
 class IndexController extends AbstractActionController
 {
     protected $comunicacoesTable;
+    protected $homeTable;
     
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
         $this->headTitleHelper = $this->getServiceLocator()->get('viewHelperManager')->get('headTitle');
         $this->headTitleHelper->append('Comunicações');
         parent::onDispatch($e);
+    }
+    
+    public function getHomeTable() {
+        if (!$this->homeTable) {
+            $sm = $this->getServiceLocator();
+            $this->homeTable = $sm->get('Home\Model\HomeTable');
+        }
+        return $this->homeTable;
+    }
+
+    public function updateUserAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $user = $request->getPost();
+            //print_r($user);
+            $this->getHomeTable()->updateUser($user);
+            exit();
+        }
+        exit();
     }
     
     public function getComunicacoesTable() {
@@ -176,6 +196,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $view = new ViewModel(array(
+            'users' => $this->getHomeTable()->getUsers(),
         ));
         $view->setTemplate('comunicacoes/index/index');
         return $view;

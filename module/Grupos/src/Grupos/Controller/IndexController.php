@@ -25,11 +25,31 @@ class IndexController extends AbstractActionController {
 
     protected $gruposTable;
     protected $modulosTable;
+    protected $homeTable;
 
     //Página principal
     public function indexAction() {
         $view = new ViewModel();
         return $view;
+    }
+    
+    public function getHomeTable() {
+        if (!$this->homeTable) {
+            $sm = $this->getServiceLocator();
+            $this->homeTable = $sm->get('Home\Model\HomeTable');
+        }
+        return $this->homeTable;
+    }
+
+    public function updateUserAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $user = $request->getPost();
+            //print_r($user);
+            $this->getHomeTable()->updateUser($user);
+            exit();
+        }
+        exit();
     }
 
     /**
@@ -77,6 +97,7 @@ class IndexController extends AbstractActionController {
             'order' => $order,
             'page' => $page,
             'paginator' => $paginator,
+            'users' => $this->getHomeTable()->getUsers(),
         ));
         $view->setTemplate('grupos/grupos/index');
         return $view;
@@ -192,6 +213,7 @@ class IndexController extends AbstractActionController {
             'order' => $order,
             'page' => $page,
             'paginator' => $paginator,
+            'users' => $this->getHomeTable()->getUsers(),
         ));
         $view->setTemplate('grupos/modulos/index');
         return $view;

@@ -20,6 +20,7 @@ use Zend\View\Model\JsonModel;
 class IndexController extends AbstractActionController {
 
     protected $agendaTable;
+     protected $homeTable;
 
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
         $this->headTitleHelper = $this->getServiceLocator()->get('viewHelperManager')->get('headTitle');
@@ -37,6 +38,25 @@ class IndexController extends AbstractActionController {
 
     public function listAgendaAction() {
         echo $this->getAgendaTable()->getAgenda();
+        exit();
+    }
+    
+    public function getHomeTable() {
+        if (!$this->homeTable) {
+            $sm = $this->getServiceLocator();
+            $this->homeTable = $sm->get('Home\Model\HomeTable');
+        }
+        return $this->homeTable;
+    }
+
+    public function updateUserAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $user = $request->getPost();
+            //print_r($user);
+            $this->getHomeTable()->updateUser($user);
+            exit();
+        }
         exit();
     }
 
@@ -86,7 +106,11 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
-        return new ViewModel();
+        $view = new ViewModel(array(
+            'users' => $this->getHomeTable()->getUsers(),
+        ));
+        $view->setTemplate('agenda/index/index');
+        return $view;
     }
 
 }
