@@ -2,6 +2,11 @@
     <?php
     $this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
     $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
+
+    //Exemplo de formatação de data
+    $teste = '2014-11-25 00:00:00';
+    $date = new \DateTime($teste);
+    echo $date->format('d-m-Y');
     ?>
     <script>
         var app = angular.module('myApp', ['ui.bootstrap']);
@@ -46,13 +51,15 @@
             </div>
             <ul class="list-unstyled main-menu">
                 <?php foreach ($this->users as $res) { ?>
-                    <li class="clearfix"><span class="pull-left"><?php echo $res['nome'] . " " . $res['sobrenome']; ?></span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="<?php echo $res['id']; ?>" <?php if ($res['status'] == "Active") {
-                echo "checked";
-            } ?> data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-        <?php } ?>
+                    <li class="clearfix"><span class="pull-left"><?php echo $res['nome'] . " " . $res['sobrenome']; ?></span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="<?php echo $res['id']; ?>" <?php
+                            if ($res['status'] == "Active") {
+                                echo "checked";
+                            }
+                            ?> data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+                    <?php } ?>
             </ul>
         </nav>
-<?php } ?>
+    <?php } ?>
 
     <div class="col-md-6">
         <div id="compromissos" class="table">
@@ -60,8 +67,8 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#c-hoje" data-toggle="tab" data-placement="top" data-original-title="Hoje"><span class="glyphicon" data-icon="N"></span> Hoje</a></li>
-    <!--            <li class=""><a href="#c-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="N"></span> Esta Semana</a></li>
-                <li class=""><a href="#c-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="N"></span> Este Mês</a></li>-->
+                <li class=""><a href="#c-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="N"></span> Esta Semana</a></li>
+                <li class=""><a href="#c-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="N"></span> Este Mês</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -77,14 +84,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-<?php foreach ($this->agenda_dia as $res) { ?>
+                                <?php foreach ($this->agenda_dia as $res) { ?>
                                     <tr>
                                         <td><?php echo $res['start_date']; ?></td>
                                         <td><?php echo $res['convidados']; ?></td>
                                         <td><?php echo $res['event_location']; ?></td>
         <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -109,8 +116,8 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#l-hoje" data-toggle="tab" data-placement="top" data-original-title="Hoje"><span class="glyphicon" data-icon="&#xe16c;"></span> Hoje</a></li>
-    <!--            <li class=""><a href="#l-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="&#xe16c;"></span> Esta Semana</a></li>
-                <li class=""><a href="#l-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="&#xe16c;"></span> Este Mês</a></li>-->
+                <li class=""><a href="#l-semana" data-toggle="tab" data-placement="top" data-original-title="Esta Semana"><span class="glyphicon" data-icon="&#xe16c;"></span> Esta Semana</a></li>
+                <li class=""><a href="#l-mes" data-toggle="tab" data-placement="top" data-original-title="Este Mês"><span class="glyphicon" data-icon="&#xe16c;"></span> Este Mês</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -126,14 +133,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-<?php foreach ($this->ligacoes_dia as $res) { ?>
+                                <?php foreach ($this->ligacoes_dia as $res) { ?>
                                     <tr>
                                         <td><?php echo $res['data_hora']; ?></td>
                                         <td><?php echo $res['membro']; ?></td>
                                         <td><?php echo $res['assunto']; ?></td>
         <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
                                     </tr>
-<?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>

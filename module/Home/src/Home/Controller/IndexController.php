@@ -47,6 +47,7 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
+        $date = new \DateTime();
         $view = new ViewModel(array(
             'agenda_dia' => $this->getHomeTable()->getAgenda(),
             'ligacoes_dia' => $this->getHomeTable()->getLigacoes(),

@@ -35,7 +35,11 @@ class HomeTable extends AbstractTableGateway {
             'details' => 'details',
             'convidados' => 'convidados',
             'event_location' => 'event_location'
-        ));
+        ))
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(start_date) = ?', $date->format('m'))); //Seleciona por mês
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(start_date) = ?', $date->format('d'))); //Seleciona por Dia
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (start_date) = WEEK(current_date) AND YEAR(start_date) = YEAR(current_date)')); //Seleciona por semana
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(start_date) = ?', $date->format('Y'))); //Seleciona por Ano
 
         $selectString = $sql->getSqlStringForSqlObject($select);
         //echo $select->getSqlString();
@@ -68,7 +72,11 @@ class HomeTable extends AbstractTableGateway {
             'assunto' => 'assunto',
             'data_hora' => 'data_hora',
             'status_ligacao' => 'status_ligacao'
-        ));
+        ))
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(data_hora) = ?', $date->format('m'))); //Seleciona por mês
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(data_hora) = ?', $date->format('d'))); //Seleciona por Dia
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (data_hora) = WEEK(current_date) AND YEAR(data_hora) = YEAR(current_date)')); //Seleciona por Semana
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(data_hora) = ?', $date->format('Y'))); //Seleciona por Ano
 
         $selectString = $sql->getSqlStringForSqlObject($select);
         //echo $select->getSqlString();
