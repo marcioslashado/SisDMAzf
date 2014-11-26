@@ -35,9 +35,6 @@ class HomeTable extends AbstractTableGateway {
             'details' => 'details',
             'convidados' => 'convidados',
             'event_location' => 'event_location'
-        ))->where(array(
-            new \Zend\Db\Sql\Predicate\Operator('start_date', '>=', $date->format('Y-m-d').' 00:00:00'), 
-            new \Zend\Db\Sql\Predicate\Operator('start_date', '<=', $date->format('Y-m-d').' 23:59:59'),
         ));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -71,9 +68,6 @@ class HomeTable extends AbstractTableGateway {
             'assunto' => 'assunto',
             'data_hora' => 'data_hora',
             'status_ligacao' => 'status_ligacao'
-        ))->where(array(
-            new \Zend\Db\Sql\Predicate\Operator('data_hora', '>=', $date->format('Y-m-d').' 00:00:00'), 
-            new \Zend\Db\Sql\Predicate\Operator('data_hora', '<=', $date->format('Y-m-d').' 23:59:59'),
         ));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
