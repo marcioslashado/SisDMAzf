@@ -6,14 +6,269 @@ echo $this->headScript()
         ->prependFile($this->basePath() . '/js/lodash.underscore.min.js')
         ->prependFile($this->basePath() . '/js/jquery-ui.js');
 ?>  
+<style>
+    textarea {
+        resize: none;
+        font-size: 12px !important;
+    }
+
+    input[data-role="input"] {
+        outline: none;
+        border: none;
+        font-size: 12px;
+        color: #555;
+        vertical-align: middle;
+        padding: 3px 4px;
+        margin: 3px;
+    }
+
+    input.error {
+        color: #f00;
+    }
+
+    [data-role="picker"] {
+        z-index: 1080;
+    }
+
+    a:focus {
+        outline: none;
+    }
+
+    a.list-group-item.hover {
+        background-color: #F5F5F5;
+        text-decoration: none;
+    }
+
+    a.label-default {
+        cursor: pointer;
+        font-size: 12px;
+        margin: 3px;
+        color: #555;
+        background-color: #F7F7F7;
+        text-decoration: none;
+    }
+
+    a.label-default.hover {
+        background-color: #DFDFDF;
+        text-decoration: none;
+    }
+
+    a.label-default.active {
+        text-decoration: none;
+    }
+
+    .panel {
+        margin: 0;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    }
+
+    .panel.focus {
+        border-color: #66AFE9;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+        outline: 0 none;
+    }
+
+    .panel-body {
+        padding: 3px 6px;
+    }
+
+    .popover {
+        max-width: 347px;
+        min-width: 276px;
+    }
+
+    .popover-content {
+        overflow: hidden;
+        font-size: 90%;
+    }
+
+    .popover-content .col-lg-4, .popover-content .col-lg-8 {
+        padding: 0 5px
+    }
+</style>
+<script id="multisearch" type="text/template">
+    <div>
+    <div class="panel panel-default">
+    <div data-role="selected-list" class="panel-body">
+    <input class="pull-left" data-role="input" type="text" placeholder=""/>
+    </div>
+    </div>
+    <div data-role="picker" class="panel panel-default">
+    <div class="list-group" data-role="picker-list">
+    </div>
+    </div>
+    </div>
+</script>
+
+<script id="contact-item" type="text/template">
+    <a class="list-group-item" href="#">
+    <small><%= display_name %> (<%= primary_email %>)</small>
+    </a>
+</script>
+
+<script id="selected-item" type="text/template">
+    <a class="label label-default pull-left"><%= display_name %>&nbsp;<span class="glyphicon glyphicon-remove" data-action="remove" aria-hidden="true"></span></a>
+</script>
+
+<script id="contact-info" type="text/template">
+    <div class="popover bottom fade">
+    <div class="arrow"></div>
+    <h3 class="popover-title"><%= display_name %></h3>
+    <div class="popover-content">
+
+    <div class="row">
+    <div class="col-lg-4 text-right"><strong>Company</strong></div>
+    <div class="col-lg-8"><%= organization %></div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-4 text-right"><strong>Email</strong></div>
+    <div class="col-lg-8"><%= primary_email %></div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-4 text-right"><strong>Phone</strong></div>
+    <div class="col-lg-8"><%= primary_phone %></div>
+    </div>
+
+    </div>
+    </div>
+</script>
 <script>
     $(document).ready(function () {
+        auto_complete();
         jQuery('#datahora').datetimepicker({
             format: 'Y-m-d H:i:s',
             inline: true,
             lang: 'pt'
         });
     });
+    
+    function auto_complete() {
+  
+
+        var multiSearch = _.template($('#multisearch').html()),
+                infoBox = _.template($('#contact-info').html());
+
+        // Since you can tab through fields, redirect the focus
+        // event to click just in case.
+        $(document.body).on('focusin', 'input, textarea', function (event) {
+            $(event.target).trigger('click');
+
+
+        });
+
+        $('div[data-control="multisearch"]').append(multiSearch())
+                .children()
+
+                .on('click', function simulateFocus(event) {
+                    var $me = $(this),
+                            $panel = $me.find('.panel');
+                    if (!$panel.is('.focus')) {
+
+                        $panel.addClass('focus');
+
+                        _.defer(function () {
+                            $(document.body).on('click.focus', function (e) {
+                                if ($me.has(e.target).length === 0) {
+                                    $panel.removeClass('focus');
+                                    $(document.body).off('click.focus');
+                                }
+                            });
+                        });
+                    }
+
+                })
+
+                .multisearch({
+                    source: localData,
+                    keyAttrs: ['id'],
+                    searchAttrs: ['display_name', 'primary_email'],
+                    formatPickerItem: _.template($('#contact-item').html()),
+                    formatSelectedItem: _.template($('#selected-item').html()),
+                    buildNewItem: function (text) {
+                        return {id: null, display_name: text, organization: '', primary_phone: '', primary_email: text};
+                    },
+                    
+                    adding: function (event, ui) {
+                        var validater = new RegExp('^(?:[^,]+@[^,/]+\.[^,/]+|)$');
+                        var TxtInput = $( "#origem" );
+                        $(TxtInput).val(TxtInput.val()+ui.data.primary_email);
+                        $(this).find('input').removeClass('error');
+                        if (ui.notfound) {
+                            if (!validater.test(ui.data.primary_email)) {
+                                $(this).find('input').addClass('error');
+                               
+                                return false;
+                            }
+                        }
+                    },
+                    
+                    itemselect: function (event, ui) {
+                        // Generate from template and add to DOM
+                        var $info = $(infoBox(ui.data)).insertAfter($(this)).show();
+
+                        // Use jQueryUI Position utility to move it to the right spot
+                        $info.position({
+                            my: 'center top+10',
+                            at: 'center bottom',
+                            of: ui.element
+                        });
+
+                        $info.addClass('in');
+                        _.defer(function () {
+                            $(document).on('click.info', function (e) {
+                                if ($info.has(e.target).length === 0) {
+                                    $info.removeClass('in');
+                                    _.delay(function () {
+                                        $info.remove();
+                                    }, 500);
+                                    $(document).off('click.info');
+                                }
+                            });
+
+                        });
+                                          
+                    },
+                });
+    }
+</script>
+<script>
+    function showComplete() {
+
+    }
+
+    localData = [
+        {"display_name": "Neal, Amelia R.", "organization": "XYZ Company", "primary_email": "pede@nibh.com", "primary_phone": "(577) 324-9152"},
+        {"display_name": "Cervantes, Colton Z.", "organization": "XYZ Company", "primary_email": "imperdiet.dictum.magna@SuspendissesagittisNullam.com", "primary_phone": "(730) 491-0518"},
+        {"display_name": "Thornton, Marvin H.", "organization": "XYZ Company", "primary_email": "tristique@in.ca", "primary_phone": "(530) 962-1617"},
+        {"display_name": "Watkins, Leilani C.", "organization": "XYZ Company", "primary_email": "amet.massa@a.edu", "primary_phone": "(368) 554-4860"},
+        {"display_name": "Blake, Sawyer Z.", "organization": "XYZ Company", "primary_email": "sodales@Pellentesquetincidunttempus.edu", "primary_phone": "(247) 412-3266"},
+        {"display_name": "Fuller, Jennifer W.", "organization": "XYZ Company", "primary_email": "ullamcorper.Duis.at@ullamcorpernislarcu.org", "primary_phone": "(263) 771-8743"},
+        {"display_name": "Pollard, Noel K.", "organization": "XYZ Company", "primary_email": "sagittis.Duis.gravida@Proin.com", "primary_phone": "(466) 130-3283"},
+        {"display_name": "Clemons, Thomas Y.", "organization": "XYZ Company", "primary_email": "Integer@sem.org", "primary_phone": "(463) 990-6407"},
+        {"display_name": "Gilbert, Kimberley D.", "organization": "XYZ Company", "primary_email": "magna.Cras.convallis@metuseuerat.com", "primary_phone": "(845) 785-9757"},
+        {"display_name": "Green, Zeus L.", "organization": "XYZ Company", "primary_email": "Ut.tincidunt@pedeCumsociis.edu", "primary_phone": "(894) 870-2892"},
+        {"display_name": "Alston, Lesley P.", "organization": "XYZ Company", "primary_email": "lectus.quis@gravida.edu", "primary_phone": "(709) 389-5236"},
+        {"display_name": "Perry, Arthur R.", "organization": "XYZ Company", "primary_email": "orci.lacus.vestibulum@elit.com", "primary_phone": "(202) 128-1825"},
+        {"display_name": "Holman, Anastasia T.", "organization": "XYZ Company", "primary_email": "lorem.vehicula.et@sitametconsectetuer.com", "primary_phone": "(756) 127-8864"},
+        {"display_name": "Howe, Zena W.", "organization": "XYZ Company", "primary_email": "nisi@Nulla.org", "primary_phone": "(925) 386-6531"},
+        {"display_name": "Gray, Evan N.", "organization": "XYZ Company", "primary_email": "nonummy.ac.feugiat@mollis.edu", "primary_phone": "(880) 530-9214"},
+        {"display_name": "Gates, Galvin D.", "organization": "XYZ Company", "primary_email": "eu@nislQuisquefringilla.com", "primary_phone": "(410) 733-0830"},
+        {"display_name": "Hendrix, Anne E.", "organization": "XYZ Company", "primary_email": "ornare.libero.at@tempor.org", "primary_phone": "(348) 482-7943"},
+        {"display_name": "Avery, Nerea V.", "organization": "XYZ Company", "primary_email": "Sed@sedconsequatauctor.org", "primary_phone": "(284) 585-9041"},
+        {"display_name": "Tillman, Debra V.", "organization": "XYZ Company", "primary_email": "Nunc.lectus@justonecante.edu", "primary_phone": "(961) 408-4886"},
+        {"display_name": "Meadows, Mona F.", "organization": "XYZ Company", "primary_email": "vestibulum.neque.sed@etlaciniavitae.com", "primary_phone": "(322) 745-5208"},
+        {"display_name": "Yates, Zena A.", "organization": "XYZ Company", "primary_email": "orci.lacus.vestibulum@Quisque.org", "primary_phone": "(975) 832-4608"},
+        {"display_name": "Hodges, Eric E.", "organization": "XYZ Company", "primary_email": "natoque.penatibus@Sedneque.edu", "primary_phone": "(984) 164-0737"},
+        {"display_name": "Mclaughlin, Tana K.", "organization": "XYZ Company", "primary_email": "pharetra.Quisque.ac@Intinciduntcongue.org", "primary_phone": "(213) 306-7213"},
+        {"display_name": "Rosario, Upton A.", "organization": "Outside Path Partners", "primary_email": "magna.et@Sedpharetrafelis.edu", "primary_phone": "(407) 281-1295"}
+    ];
+
+// Need an id ... auto-generate it
+    for (var i = 1; i < localData.length; i++)
+        localData[i].id = i;
+
 </script>
 <?php
 $title = 'Agendando Comunicação';
@@ -35,46 +290,50 @@ $this->headTitle($title);
 
         <div class='row'>
             <div class="col-md-2">
-                <label class="control-label" for="membro">Status</label>
+                <label class="control-label" for="form_status">Status</label>
                 <?php echo $this->formRow($form->get('form_status')) . PHP_EOL; ?>
                 <span class="help-block">Status deste Contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-2">
-                <label class="control-label" for="membro">Tipo</label>
+                <label class="control-label" for="form_tipo">Tipo</label>
                 <?php echo $this->formRow($form->get('form_tipo')) . PHP_EOL; ?>
                 <span class="help-block">Tipo de Comunicação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-4">
-                <label class="control-label" for="membro">Projeto</label>
+                <label class="control-label" for="form_projeto">Projeto</label>
                 <?php echo $this->formRow($form->get('form_projeto')) . PHP_EOL; ?>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-4">
-                <label class="control-label" for="membro">Etapa</label>
+                <label class="control-label" for="form_etapas">Etapa</label>
                 <?php echo $this->formRow($form->get('form_etapas')) . PHP_EOL; ?>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label class="control-label" for="membro">Origem/Membro</label>
-                <?php echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
+                <label class="control-label" for="form_origem">Origem/Membro</label>
+                <?php //echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
+                <div data-control="multisearch" size="32" class="origem"></div>
+                <input type="text" name="origem" id="origem"/>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-6">
-                <label class="control-label" for="destinatario">Destino/Contato</label>
-                <?php echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
+                <label class="control-label" for="form_destino">Destino/Contato</label>
+                <?php //echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
+                <div data-control="multisearch" size="32" class="destino"></div>
+                
                 <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
         <div class='row'>
             <div class="col-md-9">
-                <label class="control-label" for="assunto">Assunto</label>
+                <label class="control-label" for="form_assunto">Assunto</label>
                 <?php echo $this->formRow($form->get('form_assunto')) . PHP_EOL; ?>
                 <span class="help-block">Assunto da Ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-3">
-                <label class="control-label" for="datahora">Data/Horário</label>
+                <label class="control-label" for="form_data">Data/Horário</label>
                 <?php echo $this->formRow($form->get('form_data')) . PHP_EOL; ?>
                 <span class="help-block">Selecione a Data/Hora <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Selecione a Data/Hora que esta ligação deverá ser realizada"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
@@ -86,3 +345,33 @@ $this->headTitle($title);
         <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('#form_projeto').change(function() {
+        var proj_id = $('#form_projeto').val();
+        if (proj_id === '') {
+            $('#form_etapas').html('<option value="empty_option">:: Primeiro selecione um Projeto ::</option>');
+        } else {
+            get_etapas(proj_id);
+        }
+    });
+    
+    function get_etapas(proj_id) {
+        var projeto = $('#form_projeto').val();
+        $.ajax('<?php echo $this->url('comunicacoes', array('action' => 'get-etapas')); ?>?proj_id='+ projeto, {
+            type: 'get',
+            dataType: 'json',
+            data: {
+                proj_id: proj_id
+            },
+            success: function(data) {
+                $('#form_etapas').html('');
+                $.each(data, function(index, etapas) {
+                    $('#form_etapas').append('<option value="' + etapas.valor + '">' + etapas.label + '</option>');
+                });
+            },
+            error: function(error) {
+            }
+        });
+    }
+</script>

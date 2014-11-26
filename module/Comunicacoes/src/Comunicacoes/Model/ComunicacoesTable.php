@@ -44,7 +44,15 @@ class ComunicacoesTable extends AbstractTableGateway {
                 ->join(array('d' => 'contatos'), 'd.idcontatos = c.id_contato_dest', array(
                     'd_nome' => 'nomecontatos',
                     'd_sigla' => 'siglacontatos'
-                ));
+                ))
+                ->join(array('p' => 'projetos'), 'p.id_proj = c.id_projeto', array(
+                    'p_id' => 'id_proj',
+                    'p_desc' => 'titulo'
+                        ), 'left')
+                ->join(array('e' => 'etapas_projeto'), 'e.id_etapa = p.id_proj', array(
+                    'e_id' => 'id_etapa',
+                    'e_desc' => 'titulo_etapa'
+                        ), 'left');
         //->where(array('e.projeto' => $proj_id, 'e.elemento' => $el_id, 'e.fonte' => $fonte_id));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -54,48 +62,19 @@ class ComunicacoesTable extends AbstractTableGateway {
         foreach ($retorno as $res) {
             $date = new \DateTime($res['data_comunicacao']);
             $dataAtual = $date->format('d/m/Y à\s H:i');
-            $id = $res['id_contato_rem'];
-
-            if ($res['id_projeto_com'] == NULL) {
-                $selectData[] = array(
-                    'id_comunicacao' => $res['id_comunicacao'],
-                    'projeto' => 'Nenhum Projeto',
-                    'etapa' => 'Nenhuma Etapa',
-                    'data_comunicacao' => $dataAtual,
-                    'tipo_comunicacao' => $res['tipo_comunicacao'],
-                    'remetente' => $res['r_nome'],
-                    'destinatario' => $res['d_nome'],
-                    'descricao_comunicacao' => $res['descricao_comunicacao'],
-                    'status_comunicacao' => $res['status_comunicacao']
-                );
-            }
+            $selectData[] = array(
+                'id_comunicacao' => $res['id_comunicacao'],
+                'projeto' => $res['p_desc'],
+                'etapa' => $res['e_desc'],
+                'data_comunicacao' => $dataAtual,
+                'tipo_comunicacao' => $res['tipo_comunicacao'],
+                'remetente' => $res['r_nome'],
+                'destinatario' => $res['d_nome'],
+                'descricao_comunicacao' => $res['descricao_comunicacao'],
+                'status_comunicacao' => $res['status_comunicacao']
+            );
         }
         return json_encode($selectData);
-    }
-
-    public function getComunicacao($id) {
-        $this->table = array('l' => 'ligacoes');
-        $select = new Select();
-        $select->from(array('l' => 'ligacoes'));
-        $select
-                ->columns(array(
-                    //'nome_renomeado' => 'nome_campo_db'
-                    'l_id' => 'id_ligacao',
-                    'l_membro' => 'membro',
-                    'l_destino' => 'destinatario',
-                    'l_assunto' => 'assunto',
-                    'l_data' => 'data_hora',
-                    'l_status' => 'status_ligacao',
-                ))
-                ->where(array('l.id_ligacao' => $id));
-
-        //echo $select->getSqlString(); //Exibe a consulta em SQL
-        $result = $this->selectWith($select);
-        $row = $result->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $id");
-        }
-        return $row;
     }
 
     public function getDetalhes($id) {
@@ -135,30 +114,36 @@ class ComunicacoesTable extends AbstractTableGateway {
         $id = $comunicacao->form_codigo;
         $sql = new Sql($this->adapter);
         $data = array(
-            'membro' => $comunicacao->form_origem,
-            'destinatario' => $comunicacao->form_destino,
-            'assunto' => $comunicacao->form_assunto,
-            'data_hora' => $comunicacao->form_data,
-            'status_ligacao' => 'Pendente',
+            'id_projeto' => $comunicacao->form_projeto,
+            'id_etapa' => $comunicacao->form_etapas,
+            'data' => $comunicacao->form_data,
+            'tipo_comunicacao' => $comunicacao->form_tipo,
+            'id_contato_rem' => $comunicacao->form_origem,
+            'id_contato_dest' => $comunicacao->form_destino,
+            'descricao' => $comunicacao->form_assunto,
+            'status' => $comunicacao->form_status
         );
         if ($id == 0) {
-            $query = $sql->insert('ligacoes');
+            $query = $sql->insert('comunicacoes');
             $query->values($data);
             $selectString = $sql->getSqlStringForSqlObject($query);
             $results = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
             return $results;
         } else {
-            if ($this->getLigacao($id)) {
+            if ($this->getComunicacao($id)) {
                 $data = array(
-                    'membro' => $comunicacao->form_origem,
-                    'destinatario' => $comunicacao->form_destino,
-                    'assunto' => $comunicacao->form_assunto,
-                    'data_hora' => $comunicacao->form_data,
-                    'status_ligacao' => 'Pendente',
+                    'id_projeto' => $comunicacao->form_projeto,
+                    'id_etapa' => $comunicacao->form_etapas,
+                    'data' => $comunicacao->form_data,
+                    'tipo_comunicacao' => $comunicacao->form_tipo,
+                    'id_contato_rem' => $comunicacao->form_origem,
+                    'id_contato_dest' => $comunicacao->form_destino,
+                    'descricao' => $comunicacao->form_assunto,
+                    'status' => $comunicacao->form_status
                 );
-                $query2 = $sql->update('ligacoes');
+                $query2 = $sql->update('comunicacoes');
                 $query2->set($data);
-                $query2->where(array('id_ligacao' => $id));
+                $query2->where(array('id_comunicacao' => $id));
                 $selectString2 = $sql->getSqlStringForSqlObject($query2);
                 $results = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
                 return $results;
@@ -166,6 +151,33 @@ class ComunicacoesTable extends AbstractTableGateway {
                 throw new \Exception('Form id does not exist');
             }
         }
+    }
+
+    public function getComunicacao($id) {
+        $this->table = array('c' => 'comunicacoes');
+        $select = new Select();
+        $select->from(array('c' => 'comunicacoes'));
+        $select
+                ->columns(array(
+                    'id_comunicacao' => 'id_comunicacao',
+                    'id_projeto' => 'id_projeto',
+                    'id_etapa' => 'id_etapa',
+                    'data' => 'data',
+                    'tipo_comunicacao' => 'tipo_comunicacao',
+                    'id_contato_rem' => 'id_contato_rem',
+                    'id_contato_dest' => 'id_contato_dest',
+                    'descricao' => 'descricao',
+                    'status' => 'status'
+                ))
+                ->where(array('c.id_comunicacao' => $id));
+
+        //echo $select->getSqlString(); //Exibe a consulta em SQL
+        $result = $this->selectWith($select);
+        $row = $result->current();
+        if (!$row) {
+            throw new \Exception("Could not find row $id");
+        }
+        return $row;
     }
 
     public function saveAnotacao($comunicacao) {
@@ -180,7 +192,7 @@ class ComunicacoesTable extends AbstractTableGateway {
             'nota' => $comunicacao->form_nota,
         );
 
-        $query = $sql->insert('ligacoes_log');
+        $query = $sql->insert('comunicacoes_log');
         $query->values($data);
         $selectString = $sql->getSqlStringForSqlObject($query);
         $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
@@ -198,7 +210,34 @@ class ComunicacoesTable extends AbstractTableGateway {
     }
 
     public function deleteComunicacao($id) {
-        $comunicacao = new TableGateway('ligacoes', $this->adapter);
+        $comunicacao = new TableGateway('comunicacoes', $this->adapter);
         $comunicacao->delete(array('id_ligacao' => $id));
     }
+
+    public function getEtapas($id) {
+        $id = $id;
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('e' => 'etapas_projeto'));
+        $select->columns(array(
+                    'id_etapa' => 'id_etapa',
+                    'id_projeto' => 'id_projeto',
+                    'titulo_etapa' => 'titulo_etapa',
+                    'data_inicio' => 'data_inicio',
+                    'data_termino' => 'data_termino',
+                    'descricao' => 'descricao',
+                    'status' => 'status'
+                ))
+                ->where(array('e.id_projeto' => $id));
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        $selectData[] = array('valor' => '', 'label' => ':: Selecione um Projeto ::');
+        foreach ($retorno as $res) {
+            $selectData[] = array('valor' => $res['id_etapa'], 'label' => $res['titulo_etapa']);
+        }
+        return new JsonModel($selectData);
+    }
+
 }

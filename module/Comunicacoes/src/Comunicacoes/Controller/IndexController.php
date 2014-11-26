@@ -60,6 +60,12 @@ class IndexController extends AbstractActionController
         exit();
     }
     
+    public function getEtapasAction() {
+        $id = filter_input(INPUT_GET, 'proj_id');
+        $etapas = $this->getComunicacoesTable()->getEtapas($id); //print_r($projetos) para debugar
+        return $etapas; //Retorna no formato JsonModel(Json) solicitado pelo Formulário
+    }
+    
     public function addAction()
     {
         $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
@@ -72,7 +78,7 @@ class IndexController extends AbstractActionController
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
-                'mensagem' => $this->getComunicacoesTable()->saveComunicacoes($comunicacao),
+                'mensagem' => $this->getComunicacoesTable()->saveComunicacao($comunicacao),
                 'form' => $form
             ));
             $view->setTemplate('comunicacoes/index/add');

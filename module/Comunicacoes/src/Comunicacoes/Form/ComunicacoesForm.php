@@ -130,8 +130,7 @@ class ComunicacoesForm extends Form {
             'attributes' => array(
                 'id' => 'form_projeto',
                 'class' => 'form-control',
-                'required' => 'required',
-            'value' => '', //Mantém selecionado o valor '1'
+                'value' => '', //Mantém selecionado o valor '1'
             ),
             'options' => array(
                 'value_options' => $this->getOptionsForModulos(),
@@ -148,7 +147,7 @@ class ComunicacoesForm extends Form {
             'options' => array(
                 //'label' => 'Drop Down', 
                 'value_options' => array(
-                    '' => ':: Nenhuma Etapa ::',
+                    '' => ':: Selecione um Projeto ::',
                 ),
             ),
         ));
@@ -165,7 +164,7 @@ class ComunicacoesForm extends Form {
         $selectString = $sql->getSqlStringForSqlObject($select);
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
-        $selectData[''] = ':: Nenhum Projeto ::';
+        $selectData[''] = ':: Selecione um Projeto ::';
         foreach ($retorno as $res) {
             //$selectData[] = array('label' => 'Nenhum', 'options' => array($res['p_id'] => $res['p_titulo']));
             $selectData[$res['p_id']] = $res['p_titulo'];
@@ -173,5 +172,4 @@ class ComunicacoesForm extends Form {
         //print_r($selectData);
         return $selectData;
     }
-    
 }
