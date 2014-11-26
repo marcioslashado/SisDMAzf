@@ -46,11 +46,10 @@ class HomeTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $date = new \DateTime($res['start_date']);
             $current_date = new \DateTime();
             $selectData[] = array(
                 'id' => $res['id_agenda'],
-                'start_date' => $date->format('d/m/Y \à\s H:i'),
+                'start_date' => $res['start_date'],
                 'end_date' => $res['end_date'],
                 'text' => $res['text'],
                 'details' => $res['details'],
@@ -83,14 +82,13 @@ class HomeTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $date = new \DateTime($res['data_hora']);
             $selectData[] = array(
                 'id_ligacao' => $res['id_ligacao'],
                 'membro' => $res['membro'],
                 'destinatario' => $res['destinatario'],
                 'assunto' => $res['assunto'],
                 'status_ligacao' => $res['status_ligacao'],
-                'data_hora' => $date->format('d/m/Y \à\s H:i')
+                'data_hora' => $res['data_hora']
             );
         }
         return $selectData;

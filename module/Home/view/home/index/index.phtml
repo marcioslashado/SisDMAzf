@@ -2,11 +2,6 @@
     <?php
     $this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
     $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
-
-    //Exemplo de formatação de data
-    $teste = '2014-11-25 00:00:00';
-    $date = new \DateTime($teste);
-    echo $date->format('d-m-Y');
     ?>
     <script>
         var app = angular.module('myApp', ['ui.bootstrap']);
@@ -72,6 +67,7 @@
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
+                <!-- HOJE -->
                 <div class="tab-pane fade in active" id="c-hoje">
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
@@ -84,9 +80,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($this->agenda_dia as $res) { ?>
+                                <?php
+                                foreach ($this->agenda_dia as $res) {
+                                    $date = new \DateTime($res['start_date']);
+                                    ?>
                                     <tr>
-                                        <td><?php echo $res['start_date']; ?></td>
+                                        <td><?php echo $date->format('d/m/Y \à\s H:i'); ?></td>
                                         <td><?php echo $res['convidados']; ?></td>
                                         <td><?php echo $res['event_location']; ?></td>
         <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
@@ -96,14 +95,60 @@
                         </table>
                     </div>
                 </div>
+                <!-- SEMANA -->
                 <div class="tab-pane fade in" id="c-semana">
                     <div class="table-responsive">
-                        <h1>SEMANA</h1>
+                        <table class="table table-striped" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Participantes</th>
+                                    <th>Local</th>
+    <!--                                <th></th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($this->agenda_dia as $res) {
+                                    $date = new \DateTime($res['start_date']);
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $date->format('d/m/Y \à\s H:i'); ?></td>
+                                        <td><?php echo $res['convidados']; ?></td>
+                                        <td><?php echo $res['event_location']; ?></td>
+        <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div> 
+                <!-- MÊS -->
                 <div class="tab-pane fade in" id="c-mes">
                     <div class="table-responsive">
-                        <h1>MÊS</h1>
+                        <table class="table table-striped" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Participantes</th>
+                                    <th>Local</th>
+    <!--                                <th></th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($this->agenda_dia as $res) {
+                                    $date = new \DateTime($res['start_date']);
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $date->format('d/m/Y \à\s H:i'); ?></td>
+                                        <td><?php echo $res['convidados']; ?></td>
+                                        <td><?php echo $res['event_location']; ?></td>
+        <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div> 
             </div>
@@ -121,6 +166,7 @@
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
+                <!-- HOJE -->
                 <div class="tab-pane fade in active" id="l-hoje">
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
@@ -133,26 +179,75 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($this->ligacoes_dia as $res) { ?>
+                                <?php
+                                foreach ($this->ligacoes_dia as $res) {
+                                    $date = new \DateTime($res['data_hora']);
+                                    ?>
                                     <tr>
-                                        <td><?php echo $res['data_hora']; ?></td>
+                                        <td><?php echo $date->format('d/m/Y \à\s H:i'); ?></td>
                                         <td><?php echo $res['membro']; ?></td>
                                         <td><?php echo $res['assunto']; ?></td>
         <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
                                     </tr>
-                                <?php } ?>
+<?php } ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <!-- SEMANA -->
                 <div class="tab-pane fade in" id="l-semana">
                     <div class="table-responsive">
-                        <h1>SEMANA</h1>
+                        <table class="table table-striped" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Responsável</th>
+                                    <th>Assunto</th>
+    <!--                                <th></th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($this->ligacoes_dia as $res) {
+                                    $date = new \DateTime($res['data_hora']);
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $date->format('d/m/Y \à\s H:i'); ?></td>
+                                        <td><?php echo $res['membro']; ?></td>
+                                        <td><?php echo $res['assunto']; ?></td>
+        <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
+                                    </tr>
+<?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div> 
+                <!-- MÊS -->
                 <div class="tab-pane fade in" id="l-mes">
                     <div class="table-responsive">
-                        <h1>MÊS</h1>
+                        <table class="table table-striped" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Responsável</th>
+                                    <th>Assunto</th>
+    <!--                                <th></th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($this->ligacoes_dia as $res) {
+                                    $date = new \DateTime($res['data_hora']);
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $date->format('d/m/Y \à\s H:i'); ?></td>
+                                        <td><?php echo $res['membro']; ?></td>
+                                        <td><?php echo $res['assunto']; ?></td>
+        <!--                                <td><a href="#" data-toggle="modal" data-target="#myModal"><span class="glyphicon" data-icon="&#xe18e;"></span> detalhes</a></td>-->
+                                    </tr>
+<?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div> 
             </div>
