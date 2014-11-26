@@ -47,12 +47,10 @@ class IndexController extends AbstractActionController {
     }
 
     public function indexAction() {
-        $date = new \DateTime();
         $view = new ViewModel(array(
             'agenda_dia' => $this->getHomeTable()->getAgenda(),
             'ligacoes_dia' => $this->getHomeTable()->getLigacoes(),
             'users' => $this->getHomeTable()->getUsers(),
-            'date' => $date->format('Y-m-d H:i:s'),
         ));
         $view->setTemplate('home/index/index');
         return $view;

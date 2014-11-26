@@ -24,6 +24,7 @@ class HomeTable extends AbstractTableGateway {
     }
 
     public function getAgenda(Select $select = null) {
+        $date = new \DateTime();
         $sql = new Sql($this->adapter);
         $select = new Select(array('a' => 'agenda'));
         $select->columns(array(
@@ -34,6 +35,9 @@ class HomeTable extends AbstractTableGateway {
             'details' => 'details',
             'convidados' => 'convidados',
             'event_location' => 'event_location'
+        ))->where(array(
+            new \Zend\Db\Sql\Predicate\Operator('start_date', '>=', $date->format('Y-m-d').' 00:00:00'), 
+            new \Zend\Db\Sql\Predicate\Operator('start_date', '<=', $date->format('Y-m-d').' 23:59:59'),
         ));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -42,6 +46,7 @@ class HomeTable extends AbstractTableGateway {
         $selectData = array();
         foreach ($retorno as $res) {
             $date = new \DateTime($res['start_date']);
+            $current_date = new \DateTime();
             $selectData[] = array(
                 'id' => $res['id_agenda'],
                 'start_date' => $date->format('d/m/Y \à\s H:i'),
@@ -56,6 +61,7 @@ class HomeTable extends AbstractTableGateway {
     }
 
     public function getLigacoes(Select $select = null) {
+        $date = new \DateTime();
         $sql = new Sql($this->adapter);
         $select = new Select(array('l' => 'ligacoes'));
         $select->columns(array(
@@ -65,6 +71,9 @@ class HomeTable extends AbstractTableGateway {
             'assunto' => 'assunto',
             'data_hora' => 'data_hora',
             'status_ligacao' => 'status_ligacao'
+        ))->where(array(
+            new \Zend\Db\Sql\Predicate\Operator('data_hora', '>=', $date->format('Y-m-d').' 00:00:00'), 
+            new \Zend\Db\Sql\Predicate\Operator('data_hora', '<=', $date->format('Y-m-d').' 23:59:59'),
         ));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
