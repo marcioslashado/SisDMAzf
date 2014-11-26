@@ -99,8 +99,8 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
                         <tbody>
                             <tr ng-repeat="data in filtered = (list| filter:search | orderBy : predicate :reverse) | startFrom:(currentPage - 1) * entryLimit | limitTo:entryLimit">
                                 <td>{{data.id_comunicacao}}</td>
-                                <td>{{data.remetente}} <a href="#" data-placement="bottom" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a></td>
-                                <td>{{data.destinatario}} <a href="#" data-placement="bottom" data-original-title="Ver detalhes"><span class="glyphicon" data-icon="&#xe18e;"></span></a></td>
+                                <td>{{data.remetente}}</td>
+                                <td>{{data.destinatario}}</td>
                                 <td ng-if="data.tipo_comunicacao == '1'">Enviado <i class="glyphicon glyphicon-send"></i></td>
                                 <td ng-if="data.tipo_comunicacao == '2'">Recebido <i class="glyphicon glyphicon-cloud-download"></i></td>
                                 <td>{{data.projeto}}</td>
