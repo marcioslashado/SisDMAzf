@@ -102,33 +102,33 @@ echo $this->headScript()
 
 <script id="contact-item" type="text/template">
     <a class="list-group-item" href="#">
-    <small><%= display_name %> (<%= primary_email %>)</small>
+    <small><%= nome_contato %> (<%= end_email %>)</small>
     </a>
 </script>
 
 <script id="selected-item" type="text/template">
-    <a class="label label-default pull-left"><%= display_name %>&nbsp;<span class="glyphicon glyphicon-remove" data-action="remove" aria-hidden="true"></span></a>
+    <a class="label label-default pull-left"><%= nome_contato %>&nbsp;<span class="glyphicon glyphicon-remove" data-action="remove" aria-hidden="true"></span></a>
 </script>
 
 <script id="contact-info" type="text/template">
     <div class="popover bottom fade">
     <div class="arrow"></div>
-    <h3 class="popover-title"><%= display_name %></h3>
+    <h3 class="popover-title"><b><%= nome_contato %></b></h3>
     <div class="popover-content">
 
     <div class="row">
-    <div class="col-lg-4 text-right"><strong>Company</strong></div>
-    <div class="col-lg-8"><%= organization %></div>
+    <div class="col-lg-4 text-right"><strong>Órgão</strong></div>
+    <div class="col-lg-8"><%= sigla_orgao %></div>
     </div>
 
     <div class="row">
     <div class="col-lg-4 text-right"><strong>Email</strong></div>
-    <div class="col-lg-8"><%= primary_email %></div>
+    <div class="col-lg-8"><%= end_email %> (<%= tipo_email %>)</div>
     </div>
 
     <div class="row">
-    <div class="col-lg-4 text-right"><strong>Phone</strong></div>
-    <div class="col-lg-8"><%= primary_phone %></div>
+    <div class="col-lg-4 text-right"><strong>Cargo</strong></div>
+    <div class="col-lg-8"><%= cargo_contato %></div>
     </div>
 
     </div>
@@ -145,8 +145,6 @@ echo $this->headScript()
     });
     
     function auto_complete() {
-  
-
         var multiSearch = _.template($('#multisearch').html()),
                 infoBox = _.template($('#contact-info').html());
 
@@ -182,23 +180,22 @@ echo $this->headScript()
 
                 .multisearch({
                     source: localData,
-                    keyAttrs: ['id'],
-                    searchAttrs: ['display_name', 'primary_email'],
+                    keyAttrs: ['id_email'],
+                    searchAttrs: ['nome_contato', 'end_email', 'sigla_orgao'],
                     formatPickerItem: _.template($('#contact-item').html()),
                     formatSelectedItem: _.template($('#selected-item').html()),
                     buildNewItem: function (text) {
-                        return {id: null, display_name: text, organization: '', primary_phone: '', primary_email: text};
+                        return {id_email: text, nome_contato: text, sigla_orgao: text, primary_email: text, tipo_email: text};
                     },
                     
                     adding: function (event, ui) {
                         var validater = new RegExp('^(?:[^,]+@[^,/]+\.[^,/]+|)$');
-                        var TxtInput = $( "#origem" );
-                        $(TxtInput).val(TxtInput.val()+ui.data.primary_email);
+                        var TxtInput = $("#origem");
+                        $(TxtInput).val(TxtInput.val()+ui.data.id_email);
                         $(this).find('input').removeClass('error');
                         if (ui.notfound) {
-                            if (!validater.test(ui.data.primary_email)) {
+                            if (!validater.test(ui.data.id_email)) {
                                 $(this).find('input').addClass('error');
-                               
                                 return false;
                             }
                         }
@@ -228,43 +225,15 @@ echo $this->headScript()
                             });
 
                         });
-                                          
                     },
                 });
     }
 </script>
 <script>
-    localData = [
-        {"display_name": "Neal, Amelia R.", "organization": "XYZ Company", "primary_email": "pede@nibh.com", "primary_phone": "(577) 324-9152"},
-        {"display_name": "Cervantes, Colton Z.", "organization": "XYZ Company", "primary_email": "imperdiet.dictum.magna@SuspendissesagittisNullam.com", "primary_phone": "(730) 491-0518"},
-        {"display_name": "Thornton, Marvin H.", "organization": "XYZ Company", "primary_email": "tristique@in.ca", "primary_phone": "(530) 962-1617"},
-        {"display_name": "Watkins, Leilani C.", "organization": "XYZ Company", "primary_email": "amet.massa@a.edu", "primary_phone": "(368) 554-4860"},
-        {"display_name": "Blake, Sawyer Z.", "organization": "XYZ Company", "primary_email": "sodales@Pellentesquetincidunttempus.edu", "primary_phone": "(247) 412-3266"},
-        {"display_name": "Fuller, Jennifer W.", "organization": "XYZ Company", "primary_email": "ullamcorper.Duis.at@ullamcorpernislarcu.org", "primary_phone": "(263) 771-8743"},
-        {"display_name": "Pollard, Noel K.", "organization": "XYZ Company", "primary_email": "sagittis.Duis.gravida@Proin.com", "primary_phone": "(466) 130-3283"},
-        {"display_name": "Clemons, Thomas Y.", "organization": "XYZ Company", "primary_email": "Integer@sem.org", "primary_phone": "(463) 990-6407"},
-        {"display_name": "Gilbert, Kimberley D.", "organization": "XYZ Company", "primary_email": "magna.Cras.convallis@metuseuerat.com", "primary_phone": "(845) 785-9757"},
-        {"display_name": "Green, Zeus L.", "organization": "XYZ Company", "primary_email": "Ut.tincidunt@pedeCumsociis.edu", "primary_phone": "(894) 870-2892"},
-        {"display_name": "Alston, Lesley P.", "organization": "XYZ Company", "primary_email": "lectus.quis@gravida.edu", "primary_phone": "(709) 389-5236"},
-        {"display_name": "Perry, Arthur R.", "organization": "XYZ Company", "primary_email": "orci.lacus.vestibulum@elit.com", "primary_phone": "(202) 128-1825"},
-        {"display_name": "Holman, Anastasia T.", "organization": "XYZ Company", "primary_email": "lorem.vehicula.et@sitametconsectetuer.com", "primary_phone": "(756) 127-8864"},
-        {"display_name": "Howe, Zena W.", "organization": "XYZ Company", "primary_email": "nisi@Nulla.org", "primary_phone": "(925) 386-6531"},
-        {"display_name": "Gray, Evan N.", "organization": "XYZ Company", "primary_email": "nonummy.ac.feugiat@mollis.edu", "primary_phone": "(880) 530-9214"},
-        {"display_name": "Gates, Galvin D.", "organization": "XYZ Company", "primary_email": "eu@nislQuisquefringilla.com", "primary_phone": "(410) 733-0830"},
-        {"display_name": "Hendrix, Anne E.", "organization": "XYZ Company", "primary_email": "ornare.libero.at@tempor.org", "primary_phone": "(348) 482-7943"},
-        {"display_name": "Avery, Nerea V.", "organization": "XYZ Company", "primary_email": "Sed@sedconsequatauctor.org", "primary_phone": "(284) 585-9041"},
-        {"display_name": "Tillman, Debra V.", "organization": "XYZ Company", "primary_email": "Nunc.lectus@justonecante.edu", "primary_phone": "(961) 408-4886"},
-        {"display_name": "Meadows, Mona F.", "organization": "XYZ Company", "primary_email": "vestibulum.neque.sed@etlaciniavitae.com", "primary_phone": "(322) 745-5208"},
-        {"display_name": "Yates, Zena A.", "organization": "XYZ Company", "primary_email": "orci.lacus.vestibulum@Quisque.org", "primary_phone": "(975) 832-4608"},
-        {"display_name": "Hodges, Eric E.", "organization": "XYZ Company", "primary_email": "natoque.penatibus@Sedneque.edu", "primary_phone": "(984) 164-0737"},
-        {"display_name": "Mclaughlin, Tana K.", "organization": "XYZ Company", "primary_email": "pharetra.Quisque.ac@Intinciduntcongue.org", "primary_phone": "(213) 306-7213"},
-        {"display_name": "Rosario, Upton A.", "organization": "Outside Path Partners", "primary_email": "magna.et@Sedpharetrafelis.edu", "primary_phone": "(407) 281-1295"}
-    ];
-
-// Need an id ... auto-generate it
+    localData = <?php echo json_encode($this->contatos); ?>;
+    // Need an id ... auto-generate it
     for (var i = 1; i < localData.length; i++)
         localData[i].id = i;
-
 </script>
 <?php
 $title = 'Agendando Comunicação';
@@ -298,27 +267,27 @@ $this->headTitle($title);
             <div class="col-md-4">
                 <label class="control-label" for="form_projeto">Projeto</label>
                 <?php echo $this->formRow($form->get('form_projeto')) . PHP_EOL; ?>
-                <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <span class="help-block">Selecione um Projeto caso esteja envolvido <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-4">
                 <label class="control-label" for="form_etapas">Etapa</label>
                 <?php echo $this->formRow($form->get('form_etapas')) . PHP_EOL; ?>
-                <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <span class="help-block">Selecione uma Etapa caso esteja envolvida <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label class="control-label" for="form_origem">Origem/Membro</label>
+                <label class="control-label" for="form_origem">Remetente</label>
                 <?php //echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
-                <div data-control="multisearch" size="32" class="origem"></div>
+                <div data-control="multisearch" size="32" class="form_origem"></div>
                 <input type="text" name="origem" id="origem"/>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-6">
-                <label class="control-label" for="form_destino">Destino/Contato</label>
+                <label class="control-label" for="form_destino">Destinatário</label>
                 <?php //echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
                 <div data-control="multisearch" size="32" class="destino"></div>
-                
+                <input type="text" name="destino" id="destino"/>
                 <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
@@ -326,7 +295,7 @@ $this->headTitle($title);
             <div class="col-md-9">
                 <label class="control-label" for="form_assunto">Assunto</label>
                 <?php echo $this->formRow($form->get('form_assunto')) . PHP_EOL; ?>
-                <span class="help-block">Assunto da Ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <span class="help-block">Assunto deste contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-3">
                 <label class="control-label" for="form_data">Data/Horário</label>

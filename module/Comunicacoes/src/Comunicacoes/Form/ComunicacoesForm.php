@@ -102,7 +102,7 @@ class ComunicacoesForm extends Form {
                 'value_options' => array(
                     'Realizado' => 'Realizado',
                     'Remarcado' => 'Remarcado',
-                    'Pendente' => 'Pendente',
+                    'Pendente' => 'Agendado',
                     'Cancelado' => 'Cancelado',
                 ),
             ),

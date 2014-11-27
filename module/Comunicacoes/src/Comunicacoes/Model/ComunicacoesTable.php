@@ -240,4 +240,48 @@ class ComunicacoesTable extends AbstractTableGateway {
         return new JsonModel($selectData);
     }
 
+    public function getContatos(Select $select = null) {
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('c' => 'contatos'));
+        $select->columns(array(
+                    'c_id' => 'idcontatos',
+                    'c_nome' => 'nomecontatos',
+                    'c_sigla' => 'siglacontatos',
+                    'c_orgao' => 'orgaocontatos',
+                    'c_endorgao' => 'enderecoorgao',
+                    'c_tel' => 'telefone',
+                    'c_ramal' => 'ramalfone',
+                    'c_emailprim' => 'emailcontato',
+                    'c_emailsec' => 'emailsec',
+                    'c_celular' => 'celcontato',
+                    'c_cargo' => 'cargocontato',
+                ))
+                ->join(array('e' => 'contatos_emails'), 'e.id_contato = c.idcontatos', array(
+                    'e_id' => 'id',
+                    'e_tipo' => 'tipo_email',
+                    'e_email' => 'email'
+                ), 'left')
+                ->where(array('c.idcontatos' => '198'));
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = array(
+                'id_contato' => $res['c_id'],
+                'nome_contato' => $res['c_nome'],
+                'sigla_orgao' => $res['c_sigla'],
+                'nome_orgao' => $res['c_orgao'],
+                'end_orgao' => $res['c_endorgao'],
+                'cargo_contato' => $res['c_cargo'],
+                'id_email' => $res['e_id'],
+                'end_email' => $res['e_email'],
+                'tipo_email' => $res['e_tipo']
+            );
+        }
+        return $selectData;
+        exit();
+    }
+
 }

@@ -73,19 +73,22 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         
         if ($request->isPost()) {
+            print_r($_POST);
             $comunicacao = new Comunicacoes();
             $form->setData($request->getPost());
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
+                'contatos' => $this->getComunicacoesTable()->getContatos(),
                 'mensagem' => $this->getComunicacoesTable()->saveComunicacao($comunicacao),
                 'form' => $form
             ));
             $view->setTemplate('comunicacoes/index/add');
             return $view;
         }
-
+        
         $view = new ViewModel(array(
+            'contatos' => $this->getComunicacoesTable()->getContatos(),
             'form' => $form
         ));
         $view->setTemplate('comunicacoes/index/add');
@@ -108,6 +111,7 @@ class IndexController extends AbstractActionController
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
+                'contatos' => $this->getComunicacoesTable()->getContatos(),
                 'mensagem' => $this->getComunicacoesTable()->saveLigacao($comunicacao),
                 'form_codigo' => $id,
                 'form' => $form,
@@ -116,6 +120,7 @@ class IndexController extends AbstractActionController
             return $view;
         }
         $view = new ViewModel(array(
+            'contatos' => $this->getComunicacoesTable()->getContatos(),
             'form_codigo' => $id,
             'form' => $form,
         ));
