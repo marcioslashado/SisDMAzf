@@ -135,7 +135,7 @@ echo $this->headScript()
     </div>
 </script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         auto_complete();
         jQuery('#datahora').datetimepicker({
             format: 'Y-m-d H:i:s',
@@ -143,19 +143,14 @@ echo $this->headScript()
             lang: 'pt'
         });
     });
-    
     function auto_complete() {
         var multiSearch = _.template($('#multisearch').html()),
                 infoBox = _.template($('#contact-info').html());
-
         // Since you can tab through fields, redirect the focus
         // event to click just in case.
-        $(document.body).on('focusin', 'input, textarea', function (event) {
+        $(document.body).on('focusin', 'input, textarea', function(event) {
             $(event.target).trigger('click');
-
-
         });
-
         $('div[data-control="multisearch"]').append(multiSearch())
                 .children()
 
@@ -165,9 +160,8 @@ echo $this->headScript()
                     if (!$panel.is('.focus')) {
 
                         $panel.addClass('focus');
-
-                        _.defer(function () {
-                            $(document.body).on('click.focus', function (e) {
+                        _.defer(function() {
+                            $(document.body).on('click.focus', function(e) {
                                 if ($me.has(e.target).length === 0) {
                                     $panel.removeClass('focus');
                                     $(document.body).off('click.focus');
@@ -179,19 +173,20 @@ echo $this->headScript()
                 })
 
                 .multisearch({
-                    source: localData,
+                    source: <?php echo json_encode($this->contatos); ?>,
                     keyAttrs: ['id_email'],
                     searchAttrs: ['nome_contato', 'end_email', 'sigla_orgao'],
                     formatPickerItem: _.template($('#contact-item').html()),
                     formatSelectedItem: _.template($('#selected-item').html()),
-                    buildNewItem: function (text) {
+                    buildNewItem: function(text) {
                         return {id_email: text, nome_contato: text, sigla_orgao: text, primary_email: text, tipo_email: text};
                     },
-                    
-                    adding: function (event, ui) {
+                    adding: function(event, ui) {
                         var validater = new RegExp('^(?:[^,]+@[^,/]+\.[^,/]+|)$');
+                        
                         var TxtInput = $("#origem");
-                        $(TxtInput).val(TxtInput.val()+ui.data.id_email);
+                        $(TxtInput).val(TxtInput.val() + ui.data.id_email);
+
                         $(this).find('input').removeClass('error');
                         if (ui.notfound) {
                             if (!validater.test(ui.data.id_email)) {
@@ -200,40 +195,30 @@ echo $this->headScript()
                             }
                         }
                     },
-                    
-                    itemselect: function (event, ui) {
+                    itemselect: function(event, ui) {
                         // Generate from template and add to DOM
                         var $info = $(infoBox(ui.data)).insertAfter($(this)).show();
-
                         // Use jQueryUI Position utility to move it to the right spot
                         $info.position({
                             my: 'center top+10',
                             at: 'center bottom',
                             of: ui.element
                         });
-
                         $info.addClass('in');
-                        _.defer(function () {
-                            $(document).on('click.info', function (e) {
+                        _.defer(function() {
+                            $(document).on('click.info', function(e) {
                                 if ($info.has(e.target).length === 0) {
                                     $info.removeClass('in');
-                                    _.delay(function () {
+                                    _.delay(function() {
                                         $info.remove();
                                     }, 500);
                                     $(document).off('click.info');
                                 }
                             });
-
                         });
                     },
                 });
     }
-</script>
-<script>
-    localData = <?php echo json_encode($this->contatos); ?>;
-    // Need an id ... auto-generate it
-    for (var i = 1; i < localData.length; i++)
-        localData[i].id = i;
 </script>
 <?php
 $title = 'Agendando Comunicação';
@@ -278,14 +263,14 @@ $this->headTitle($title);
         <div class="row">
             <div class="col-md-6">
                 <label class="control-label" for="form_origem">Remetente</label>
-                <?php //echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
+                <?php //echo $this->formRow($form->get('form_origem')) . PHP_EOL;  ?>
                 <div data-control="multisearch" size="32" class="form_origem"></div>
                 <input type="text" name="origem" id="origem"/>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-6">
                 <label class="control-label" for="form_destino">Destinatário</label>
-                <?php //echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
+                <?php //echo $this->formRow($form->get('form_destino')) . PHP_EOL;  ?>
                 <div data-control="multisearch" size="32" class="destino"></div>
                 <input type="text" name="destino" id="destino"/>
                 <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
@@ -320,10 +305,9 @@ $this->headTitle($title);
             get_etapas(proj_id);
         }
     });
-    
     function get_etapas(proj_id) {
         var projeto = $('#form_projeto').val();
-        $.ajax('<?php echo $this->url('comunicacoes', array('action' => 'get-etapas')); ?>?proj_id='+ projeto, {
+        $.ajax('<?php echo $this->url('comunicacoes', array('action' => 'get-etapas')); ?>?proj_id=' + projeto, {
             type: 'get',
             dataType: 'json',
             data: {
