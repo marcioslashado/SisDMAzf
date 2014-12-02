@@ -17,10 +17,16 @@ $this->headTitle($title);
             <div style="margin-top:10px;"><div class="alert alert-success">Contato adicionado com sucesso! <a class="btn btn-success" href="<?php echo $this->url('contatos'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Contatos</a></div></div>
         <?php } ?>
 
-        <div class="col-md-3">
+        <div class="col-md-6">
             <label class="control-label" for="nome">Nome *</label>
             <?php echo $this->formRow($form->get('form_nome')) . PHP_EOL; ?>
             <span class="help-block">Nome <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o nome."> <span class="glyphicon" data-icon=""></span></a></span>  
+        </div>
+            
+        <div class="col-md-6">
+            <label class="control-label" for="form_cargo">Cargo</label>
+            <?php echo $this->formRow($form->get('form_cargo')) . PHP_EOL; ?>
+            <span class="help-block">Cargo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o cargo deste contato."> <span class="glyphicon" data-icon=""></span></a></span>  
         </div>
 
         <div class="col-md-3">
@@ -33,10 +39,10 @@ $this->headTitle($title);
             <?php echo $this->formRow($form->get('form_orgao')) . PHP_EOL; ?>
             <span class="help-block">Nome por extenso <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Nome completo do Órgão."> <span class="glyphicon" data-icon=""></span></a></span>  
         </div>
-        <div class="col-md-3">
-            <label class="control-label" for="form_cargo">Cargo</label>
-            <?php echo $this->formRow($form->get('form_cargo')) . PHP_EOL; ?>
-            <span class="help-block">Cargo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o cargo deste contato."> <span class="glyphicon" data-icon=""></span></a></span>  
+        <div class="col-md-6">
+            <label class="control-label" for="form_endereco">Endereço do Órgão</label>
+            <?php echo $this->formRow($form->get('form_endereco')) . PHP_EOL; ?>
+            <span class="help-block">Endereço completo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o endereço completo do órgão."> <span class="glyphicon" data-icon=""></span></a></span>  
         </div>
 
         <div class="col-md-12">
@@ -102,7 +108,7 @@ $this->headTitle($title);
             e.preventDefault();
             if (x < max_fields) { //max input box allowed
                 x++; //text box increment
-                $(telefones).append('<div><div class="col-md-4"><label class="control-label" for="form_telefone">Telefone</label>            <input name="form_telefone&#x5B;&#x5D;" type="text" id="nome_telefone" class="form-control&#x20;input-sm" placeholder="&#x28;99&#x29;&#x20;9999-9999" required="required" value="">            <span class="help-block">Número do Telefone <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o número telefônico."> <span class="glyphicon" data-icon=""></span></a></span>          </div>        <div class="col-md-3">            <label class="control-label" for="form_ramal">Ramal</label>            <input name="form_ramal&#x5B;&#x5D;" type="text" id="form_ramal" class="form-control&#x20;input-sm" placeholder="9999&#x2F;9999&#x2F;9999" value="">            <span class="help-block">Ramal do Telefone <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Opcional, deixe em branco caso não exista."> <span class="glyphicon" data-icon=""></span></a></span>         </div>                    <div class="col-md-4">            <label class="control-label" for="form_tipo_fone">Tipo</label>            <input name="form_tipo_fone&#x5B;&#x5D;" type="text" id="nome_celular" class="form-control&#x20;input-sm" placeholder="Ex.&#x3A;&#x20;Fixo,&#x20;Celular,&#x20;etc" value="">            <span class="help-block">Tipo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ex.: Residencial, Particular, Celular, Escritório, etc."> <span class="glyphicon" data-icon=""></span></a></span>          </div><div class="col-md-1"><label class="control-label">&nbsp;</label></div><a href="#" class="remove_fone col-md-1">Remover</a></div>');
+                $(telefones).append('<div><div class="col-md-4"><label class="control-label" for="form_telefone">Telefone</label>            <input name="form_telefone&#x5B;&#x5D;" type="text" id="nome_telefone" class="form-control&#x20;input-sm" placeholder="&#x28;99&#x29;&#x20;9999-9999" required="required" value="">            <span class="help-block">Número do Telefone <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o número telefônico."> <span class="glyphicon" data-icon=""></span></a></span>          </div>        <div class="col-md-3">            <label class="control-label" for="form_ramal">Ramal</label>            <input name="form_ramal&#x5B;&#x5D;" type="text" id="form_ramal" class="form-control&#x20;input-sm" placeholder="9999&#x2F;9999&#x2F;9999" value="">            <span class="help-block">Ramal do Telefone <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Opcional, deixe em branco caso não exista."> <span class="glyphicon" data-icon=""></span></a></span>         </div>                    <div class="col-md-4">            <label class="control-label" for="form_tipo_fone">Tipo</label>            <input name="form_tipo_fone&#x5B;&#x5D;" type="text" id="nome_celular" class="form-control&#x20;input-sm" placeholder="Ex.&#x3A;&#x20;Fixo,&#x20;Celular,&#x20;etc" value="">            <span class="help-block">Tipo <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Ex.: Residencial, Particular, Celular, Escritório, etc."> <span class="glyphicon" data-icon=""></span></a></span>          </div><div class="col-md-1"><label class="control-label">&nbsp;</label></div><a href="#" class="remove_fone col-md-1">Remover <span data-icon="&#xe1d6;" class="glyphicon"></span></a></div>');
             }
         });
         
@@ -110,7 +116,7 @@ $this->headTitle($title);
             e.preventDefault();
             if (x < max_fields) { //max input box allowed
                 x++; //text box increment
-                $(emails).append('<div><div class="col-md-6">            <label class="control-label" for="form_email">Email *</label>            <input name="form_email&#x5B;&#x5D;" type="text" id="nome_email" class="form-control&#x20;input-sm" placeholder="email&#x40;provedor.com" required="required" value="">            <span class="help-block">Endereço de Email <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o Endereço de Email."> <span class="glyphicon" data-icon=""></span></a></span>          </div>        <div class="col-md-5">            <label class="control-label" for="form_tipo_email">Tipo de Email</label>            <input name="form_tipo_email&#x5B;&#x5D;" type="text" id="nome_email" class="form-control&#x20;input-sm" placeholder="Ex.&#x3A;&#x20;Particular,&#x20;Institucional,&#x20;etc" value="">            <span class="help-block">Tipo de Email <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Opcional."> <span class="glyphicon" data-icon=""></span></a></span>          </div><div class="col-md-1"><label class="control-label">&nbsp;</label></div><a href="#" class="remove_email col-md-1">Remover</a></div>');
+                $(emails).append('<div><div class="col-md-6">            <label class="control-label" for="form_email">Email *</label>            <input name="form_email&#x5B;&#x5D;" type="text" id="nome_email" class="form-control&#x20;input-sm" placeholder="email&#x40;provedor.com" required="required" value="">            <span class="help-block">Endereço de Email <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite o Endereço de Email."> <span class="glyphicon" data-icon=""></span></a></span>          </div>        <div class="col-md-5">            <label class="control-label" for="form_tipo_email">Tipo de Email</label>            <input name="form_tipo_email&#x5B;&#x5D;" type="text" id="nome_email" class="form-control&#x20;input-sm" placeholder="Ex.&#x3A;&#x20;Particular,&#x20;Institucional,&#x20;etc" value="">            <span class="help-block">Tipo de Email <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Opcional."> <span class="glyphicon" data-icon=""></span></a></span>          </div><div class="col-md-1"><label class="control-label">&nbsp;</label></div><a href="#" class="remove_email col-md-1">Remover <span data-icon="&#xe1d6;" class="glyphicon"></span></a></div>');
             }
         });
 
