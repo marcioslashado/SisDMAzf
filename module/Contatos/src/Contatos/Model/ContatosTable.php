@@ -128,9 +128,12 @@ class ContatosTable extends AbstractTableGateway {
             'cargocontato' => $form_cargo,
         );
         
-        //$result = array_merge($form_telefone, $form_ramal, $form_tipo_fone);
-        $result = array('telefone' => $form_telefone, 'Ramal' => $form_ramal, 'Tipo' => $form_tipo_fone);
-        print_r($result);
+        foreach (array_map(NULL, $form_telefone, $form_ramal, $form_tipo_fone) as $x) {
+          list($form_telefone, $form_ramal, $form_tipo_fone) = $x;
+          //echo "$form_telefone $form_ramal $form_tipo_fone\n";
+          $dados = array('Telefone' => $form_telefone, 'Ramal' => $form_ramal, 'Tipo' => $form_tipo_fone);
+          print_r($dados);
+        }
         
 //        if ($id == 0) {
 //            $query = $sql->insert('contatos');
