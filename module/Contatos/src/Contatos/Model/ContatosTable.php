@@ -25,19 +25,27 @@ class ContatosTable extends AbstractTableGateway {
 
     public function getContatos(Select $select = null) {
         $sql = new Sql($this->adapter);
-        $select = new Select(array('e' => 'contatos'));
+        $select = new Select(array('c' => 'contatos'));
         $select->columns(array(
-            'idcontatos' => 'idcontatos',
-            'nomecontatos' => 'nomecontatos',
-            'siglacontatos' => 'siglacontatos',
-            'orgaocontatos' => 'orgaocontatos',
-            'enderecoorgao' => 'enderecoorgao',
-            'telefone' => 'telefone',
-            'ramalfone' => 'ramalfone',
-            'emailcontato' => 'emailcontato',
-            'celcontato' => 'celcontato',
-            'cargocontato' => 'cargocontato'
-        ));
+                    'idcontatos' => 'idcontatos',
+                    'nomecontatos' => 'nomecontatos',
+                    'siglacontatos' => 'siglacontatos',
+                    'orgaocontatos' => 'orgaocontatos',
+                    'enderecoorgao' => 'enderecoorgao',
+                    'enderecoorgao' => 'enderecoorgao',
+                    'cargocontato' => 'cargocontato'
+                ))
+                ->join(array('e' => 'contatos_emails'), 'e.id_contato = c.idcontatos', array(
+                    'e_id' => 'id',
+                    'e_tipo' => 'tipo_email',
+                    'e_email' => 'email'
+                ), 'left')
+                ->join(array('t' => 'contatos_telefones'), 't.id_contato = c.idcontatos', array(
+                    't_id' => 'id',
+                    't_tipo' => 'tipo_fone',
+                    't_tel' => 'telefone',
+                    't_ramal' => 'ramal'
+                ), 'left');
         //->where(array('e.projeto' => $proj_id, 'e.elemento' => $el_id, 'e.fonte' => $fonte_id));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -45,38 +53,48 @@ class ContatosTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $selectData[] = array(
-                'id_contato' => $res['idcontatos'],
-                'nome_completo' => $res['nomecontatos'],
-                'o_sigla' => $res['siglacontatos'],
-                'o_nome' => $res['orgaocontatos'],
-                'o_endereco' => $res['enderecoorgao'],
-                'fone' => $res['telefone'],
-                'ramal' => $res['ramalfone'],
-                'email' => $res['emailcontato'],
-                'celular' => $res['celcontato'],
-                'cargo' => $res['cargocontato']
-            );
+              $selectData[] = $res; //retorna logo tudo
+              
+//            $selectData[] = array(
+//                'id_contato' => $res['idcontatos'],
+//                'nome_completo' => $res['nomecontatos'],
+//                'o_sigla' => $res['siglacontatos'],
+//                'o_nome' => $res['orgaocontatos'],
+//                'o_endereco' => $res['enderecoorgao'],
+//                'fone' => $res['telefone'],
+//                'ramal' => $res['ramalfone'],
+//                'email' => $res['emailcontato'],
+//                'celular' => $res['celcontato'],
+//                'cargo' => $res['cargocontato']
+//            );
         }
         return json_encode($selectData);
     }
-    
+
     public function getContato($id) {
         $this->table = array('c' => 'contatos');
         $select = new Select();
         $select->from(array('c' => 'contatos'));
-        $select
-                ->columns(array(
-                    //'nome_renomeado' => 'nome_campo_db'
-                    'c_id' => 'idcontatos',
-                    'c_nome' => 'nomecontatos',
-                    'c_sigla' => 'siglacontatos',
-                    'c_cargo' => 'cargocontato',
-                    'c_fone' => 'telefone',
-                    'c_ramal' => 'ramalfone',
-                    'c_celular' => 'celcontato',
-                    'c_email' => 'emailcontato',
+        $select->columns(array(
+                    'idcontatos' => 'idcontatos',
+                    'nomecontatos' => 'nomecontatos',
+                    'siglacontatos' => 'siglacontatos',
+                    'orgaocontatos' => 'orgaocontatos',
+                    'enderecoorgao' => 'enderecoorgao',
+                    'enderecoorgao' => 'enderecoorgao',
+                    'cargocontato' => 'cargocontato'
                 ))
+                ->join(array('e' => 'contatos_emails'), 'e.id_contato = c.idcontatos', array(
+                    'e_id' => 'id',
+                    'e_tipo' => 'tipo_email',
+                    'e_email' => 'email'
+                ), 'left')
+                ->join(array('t' => 'contatos_telefones'), 't.id_contato = c.idcontatos', array(
+                    't_id' => 'id',
+                    't_tipo' => 'tipo_fone',
+                    't_tel' => 'telefone',
+                    't_ramal' => 'ramal'
+                ), 'left')
                 ->where(array('c.idcontatos' => $id));
 
         //echo $select->getSqlString(); //Exibe a consulta em SQL
@@ -128,9 +146,10 @@ class ContatosTable extends AbstractTableGateway {
             }
         }
     }
-    
+
     public function deleteContato($id) {
         $contato = new TableGateway('contatos', $this->adapter);
         $contato->delete(array('idcontatos' => $id));
     }
+
 }

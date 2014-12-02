@@ -13,11 +13,16 @@ class Contatos implements InputFilterAwareInterface {
     public $c_id;
     public $c_nome;
     public $c_sigla;
+    public $c_orgao;
+    public $c_endereco;
     public $c_cargo;
-    public $c_fone;
-    public $c_ramal;
-    public $c_celular;
-    public $c_email;
+    public $e_id;
+    public $e_tipo;
+    public $e_email;
+    public $t_id;
+    public $t_tipo;
+    public $t_tel;
+    public $t_ramal;
 
     /**
      * Para o Form
@@ -25,36 +30,48 @@ class Contatos implements InputFilterAwareInterface {
     public $form_codigo;
     public $form_nome;
     public $form_sigla;
+    public $form_orgao;
+    public $form_endereco;
     public $form_cargo;
     public $form_telefone;
     public $form_ramal;
-    public $form_celular;
+    public $form_tipo_fone;
     public $form_email;
+    public $form_tipo_email;
 
     /**
      * Used by ResultSet to pass each database row to the entity
      */
     public function exchangeArray($data) {
-        $this->c_id = (isset($data['c_id'])) ? $data['c_id'] : null;
-        $this->c_nome = (isset($data['c_nome'])) ? $data['c_nome'] : null;
-        $this->c_sigla = (isset($data['c_sigla'])) ? $data['c_sigla'] : null;
-        $this->c_cargo = (isset($data['c_cargo'])) ? $data['c_cargo'] : null;
-        $this->c_fone = (isset($data['c_fone'])) ? $data['c_fone'] : null;
-        $this->c_ramal = (isset($data['c_ramal'])) ? $data['c_ramal'] : null;
-        $this->c_celular = (isset($data['c_celular'])) ? $data['c_celular'] : null;
-        $this->c_email = (isset($data['c_email'])) ? $data['c_email'] : null;
+        $this->c_id = (isset($data['idcontatos'])) ? $data['idcontatos'] : null;
+        $this->c_nome = (isset($data['nomecontatos'])) ? $data['nomecontatos'] : null;
+        $this->c_sigla = (isset($data['siglacontatos'])) ? $data['siglacontatos'] : null;
+        $this->c_orgao = (isset($data['orgaocontatos'])) ? $data['orgaocontatos'] : null;
+        $this->c_endereco = (isset($data['enderecoorgao'])) ? $data['enderecoorgao'] : null;
+        $this->c_cargo = (isset($data['cargocontato'])) ? $data['cargocontato'] : null;
+        $this->e_id = (isset($data['e_id'])) ? $data['e_id'] : null;
+        $this->e_tipo = (isset($data['e_tipo'])) ? $data['e_tipo'] : null;
+        $this->e_email = (isset($data['e_email'])) ? $data['e_email'] : null;
+        $this->t_id = (isset($data['t_id'])) ? $data['t_id'] : null;
+        $this->t_tipo = (isset($data['t_tipo'])) ? $data['t_tipo'] : null;
+        $this->t_tel = (isset($data['t_tel'])) ? $data['t_tel'] : null;
+        $this->t_ramal = (isset($data['t_ramal'])) ? $data['t_ramal'] : null;
+
         /**
          * Registro de campos do Formulário
          * Necessários para a ação de CRUD
          */
-        $this->form_codigo = (isset($data['c_id'])) ? $data['c_id'] : null;
-        $this->form_nome = (isset($data['c_nome'])) ? $data['c_nome'] : null;
-        $this->form_sigla = (isset($data['c_sigla'])) ? $data['c_sigla'] : null;
-        $this->form_cargo = (isset($data['c_cargo'])) ? $data['c_cargo'] : null;
-        $this->form_telefone = (isset($data['c_fone'])) ? $data['c_fone'] : null;
-        $this->form_ramal = (isset($data['c_ramal'])) ? $data['c_ramal'] : null;
-        $this->form_celular = (isset($data['c_celular'])) ? $data['c_celular'] : null;
-        $this->form_email = (isset($data['c_email'])) ? $data['c_email'] : null;
+        $this->form_codigo = (isset($data['idcontatos'])) ? $data['idcontatos'] : null;
+        $this->form_nome = (isset($data['nomecontatos'])) ? $data['nomecontatos'] : null;
+        $this->form_sigla = (isset($data['siglacontatos'])) ? $data['siglacontatos'] : null;
+        $this->form_orgao = (isset($data['orgaocontatos'])) ? $data['orgaocontatos'] : null;
+        $this->form_endereco = (isset($data['enderecoorgao'])) ? $data['enderecoorgao'] : null;
+        $this->form_cargo = (isset($data['cargocontato'])) ? $data['cargocontato'] : null;
+        $this->form_telefone = (isset($data['t_tel'])) ? $data['t_tel'] : null;
+        $this->form_tipo_fone = (isset($data['t_tipo'])) ? $data['t_tipo'] : null;
+        $this->form_ramal = (isset($data['t_ramal'])) ? $data['t_ramal'] : null;
+        $this->form_tipo_email = (isset($data['e_tipo'])) ? $data['e_tipo'] : null;
+        $this->form_email = (isset($data['e_email'])) ? $data['e_email'] : null;
     }
 
     public function getArrayCopy() {
@@ -88,6 +105,14 @@ class Contatos implements InputFilterAwareInterface {
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(
+                        'name' => 'form_orgao',
+                        'required' => true
+            )));
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'form_endereco',
+                        'required' => true
+            )));
+            $inputFilter->add($factory->createInput(array(
                         'name' => 'form_cargo',
                         'required' => true
             )));
@@ -100,12 +125,16 @@ class Contatos implements InputFilterAwareInterface {
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'form_celular',
-                        'required' => true
+                        'name' => 'form_tipo_fone',
+                        'required' => false
             )));
             $inputFilter->add($factory->createInput(array(
                         'name' => 'form_email',
                         'required' => true
+            )));
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'form_tipo_email',
+                        'required' => false
             )));
             $this->inputFilter = $inputFilter;
         }

@@ -41,6 +41,27 @@ class ContatosForm extends Form {
                 'placeholder' => 'IPLANFOR, IFAN, etc'
             ),
         ));
+        
+        $this->add(array(
+            'name' => 'form_orgao',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'form_orgao',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Nome do Orgão'
+            ),
+        ));
+        
+        $this->add(array(
+            'name' => 'form_endereco',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'form_endereco',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Endereço completo do órgão'
+            ),
+        ));
+        
         $this->add(array(
             'name' => 'form_cargo',
             'attributes' => array(
@@ -51,7 +72,7 @@ class ContatosForm extends Form {
             ),
         ));
         $this->add(array(
-            'name' => 'form_telefone',
+            'name' => 'form_telefone[]',
             'attributes' => array(
                 'type' => 'text',
                 'id' => 'nome_telefone',
@@ -61,7 +82,7 @@ class ContatosForm extends Form {
             ),
         ));
         $this->add(array(
-            'name' => 'form_ramal',
+            'name' => 'form_ramal[]',
             'attributes' => array(
                 'type' => 'text',
                 'id' => 'form_ramal',
@@ -70,22 +91,31 @@ class ContatosForm extends Form {
             ),
         ));
         $this->add(array(
-            'name' => 'form_celular',
+            'name' => 'form_tipo_fone[]',
             'attributes' => array(
                 'type' => 'text',
                 'id' => 'nome_celular',
                 'class' => 'form-control input-sm',
-                'placeholder' => '(99) 9999-9999'
+                'placeholder' => 'Ex.: Fixo, Celular, etc'
             ),
         ));
         $this->add(array(
-            'name' => 'form_email',
+            'name' => 'form_email[]',
             'attributes' => array(
                 'type' => 'text',
                 'id' => 'nome_email',
                 'class' => 'form-control input-sm',
                 'placeholder' => 'email@provedor.com', 
                 'required' => 'required'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_tipo_email[]',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'nome_email',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Ex.: Particular, Institucional, etc'
             ),
         ));
         
