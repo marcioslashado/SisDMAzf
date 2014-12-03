@@ -117,23 +117,23 @@ class Contatos implements InputFilterAwareInterface {
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'form_telefone',
+                        'name' => 'form_telefone[]',
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'form_ramal',
+                        'name' => 'form_ramal[]',
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'form_tipo_fone',
+                        'name' => 'form_tipo_fone[]',
                         'required' => false
             )));
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'form_email',
+                        'name' => 'form_email[]',
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(
-                        'name' => 'form_tipo_email',
+                        'name' => 'form_tipo_email[]',
                         'required' => false
             )));
             $this->inputFilter = $inputFilter;

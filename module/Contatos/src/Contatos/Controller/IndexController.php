@@ -90,6 +90,7 @@ class IndexController extends AbstractActionController
         if (!$id) {
             return $this->redirect()->toRoute('contatos', array('action'=>'add'));
         }
+        
         $contato = $this->getContatosTable()->getContato($id);
 
         $form = new ContatosForm();
@@ -101,6 +102,7 @@ class IndexController extends AbstractActionController
             $contato = $request->getPost();
             
             $view = new ViewModel(array(
+                'actions' => $contato,
                 'mensagem' => $this->getContatosTable()->saveContato($contato),
                 'form_codigo' => $id,
                 'form' => $form,
@@ -109,6 +111,7 @@ class IndexController extends AbstractActionController
             return $view;
         }
         $view = new ViewModel(array(
+            'actions' => $contato,
             'form_codigo' => $id,
             'form' => $form,
         ));

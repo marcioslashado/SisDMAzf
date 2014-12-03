@@ -39,13 +39,13 @@ class ContatosTable extends AbstractTableGateway {
                     'e_id' => 'id',
                     'e_tipo' => 'tipo_email',
                     'e_email' => 'email'
-                ), 'left')
+                        ), 'left')
                 ->join(array('t' => 'contatos_telefones'), 't.id_contato = c.idcontatos', array(
                     't_id' => 'id',
                     't_tipo' => 'tipo_fone',
                     't_tel' => 'telefone',
                     't_ramal' => 'ramal'
-                ), 'left');
+                        ), 'left');
         //->where(array('e.projeto' => $proj_id, 'e.elemento' => $el_id, 'e.fonte' => $fonte_id));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -53,8 +53,7 @@ class ContatosTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-              $selectData[] = $res; //retorna logo tudo
-              
+            $selectData[] = $res; //retorna logo tudo
 //            $selectData[] = array(
 //                'id_contato' => $res['idcontatos'],
 //                'nome_completo' => $res['nomecontatos'],
@@ -119,7 +118,7 @@ class ContatosTable extends AbstractTableGateway {
         $form_ramal = $contato->form_ramal;
         $form_tipo_email = $contato->form_tipo_email;
         $form_email = $contato->form_email;
-        
+
         $dados = array(
             'nomecontatos' => $form_nome,
             'siglacontatos' => $form_sigla,
@@ -127,67 +126,80 @@ class ContatosTable extends AbstractTableGateway {
             'enderecoorgao' => $form_endereco,
             'cargocontato' => $form_cargo,
         );
-        
-        foreach (array_map(NULL, $form_telefone, $form_ramal, $form_tipo_fone) as $x) {
-          list($form_telefone, $form_ramal, $form_tipo_fone) = $x;
-          //echo "$form_telefone $form_ramal $form_tipo_fone\n";
-          $dados = array('Telefone' => $form_telefone, 'Ramal' => $form_ramal, 'Tipo' => $form_tipo_fone);
-          print_r($dados);
+
+        if ($id == 0) {
+            $query = $sql->insert('contatos');
+            $query->values($dados);
+            $selectString = $sql->getSqlStringForSqlObject($query);
+            $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+
+            $pega_id = $this->adapter->getDriver()->getConnection()->getLastGeneratedValue();
+
+            if (count($form_telefone) > 0 AND count($form_email) > 0) {
+                //Telefone
+                foreach (array_map(NULL, $form_telefone, $form_ramal, $form_tipo_fone) as $x) {
+                    list($form_telefone, $form_ramal, $form_tipo_fone) = $x;
+                    //echo "$form_telefone $form_ramal $form_tipo_fone\n";
+                    $telefones = array(
+                        'id_contato' => $pega_id,
+                        'tipo_fone' => $form_tipo_fone,
+                        'telefone' => $form_telefone,
+                        'ramal' => $form_ramal
+                    );
+
+                    $query2 = $sql->insert('contatos_telefones');
+                    $query2->values($telefones);
+                    $selectString2 = $sql->getSqlStringForSqlObject($query2);
+                    $results_tel = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
+                }
+                foreach (array_map(NULL, $form_email, $form_tipo_email) as $x) {
+                    list($form_email, $form_tipo_email) = $x;
+                    $emails = array(
+                        'id_contato' => $pega_id,
+                        'tipo_email' => $form_tipo_email,
+                        'email' => $form_email
+                    );
+
+                    $query3 = $sql->insert('contatos_emails');
+                    $query3->values($emails);
+                    $selectString3 = $sql->getSqlStringForSqlObject($query3);
+                    $results_email = $this->adapter->query($selectString3, Adapter::QUERY_MODE_EXECUTE);
+                }
+                return $results_tel;
+                return $results_email;
+            }
+        } else {
+            if ($this->getPermissions($id)) {
+                $role = array(
+                    'rid' => $id,
+                    'role_name' => $grupo_titulo,
+                    'status' => $grupo_status,
+                );
+
+                $query = $sql->update('role');
+                $query->set($role);
+                $query->where(array('rid' => $id));
+                $selectString = $sql->getSqlStringForSqlObject($query);
+                $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+
+                $delete = new TableGateway('role_permission', $this->adapter);
+                $delete->delete(array('role_id' => $id));
+
+                foreach ($grupo_modulo as $k => $v) {
+                    $data_arr = array(
+                        'role_id' => $id,
+                        'permission_nome' => $v,
+                    );
+                    $query2 = $sql->insert('role_permission');
+                    $query2->values($data_arr);
+                    $selectString2 = $sql->getSqlStringForSqlObject($query2);
+                    $results = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
+                }
+                return $results;
+            } else {
+                throw new \Exception('Form id does not exist');
+            }
         }
-        
-//        if ($id == 0) {
-//            $query = $sql->insert('contatos');
-//            $query->values($dados);
-//            $selectString = $sql->getSqlStringForSqlObject($query);
-//            $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-//
-//            $pega_id = $this->adapter->getDriver()->getConnection()->getLastGeneratedValue();
-//
-//            if (count($form_telefone) > 0) {
-//                foreach ($form_telefone as $k => $v) {
-//                    $data_arr = array(
-//                        'role_id' => $pega_id,
-//                        'permission_nome' => $v,
-//                    );
-//                    $query2 = $sql->insert('role_permission');
-//                    $query2->values($data_arr);
-//                    $selectString2 = $sql->getSqlStringForSqlObject($query2);
-//                    $results = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
-//                }
-//                return $results;
-//            }
-//        } else {
-//            if ($this->getPermissions($id)) {
-//                $role = array(
-//                    'rid' => $id,
-//                    'role_name' => $grupo_titulo,
-//                    'status' => $grupo_status,
-//                );
-//                
-//                $query = $sql->update('role');
-//                $query->set($role);
-//                $query->where(array('rid' => $id));
-//                $selectString = $sql->getSqlStringForSqlObject($query);
-//                $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-//
-//                $delete = new TableGateway('role_permission', $this->adapter);
-//                $delete->delete(array('role_id' => $id));
-//                
-//                foreach ($grupo_modulo as $k => $v) {
-//                    $data_arr = array(
-//                        'role_id' => $id,
-//                        'permission_nome' => $v,
-//                    );
-//                    $query2 = $sql->insert('role_permission');
-//                    $query2->values($data_arr);
-//                    $selectString2 = $sql->getSqlStringForSqlObject($query2);
-//                    $results = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
-//                }
-//                return $results;
-//            } else {
-//                throw new \Exception('Form id does not exist');
-//            }
-//        }
     }
 
     public function deleteContato($id) {

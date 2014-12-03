@@ -92,13 +92,21 @@ class ContatosForm extends Form {
         ));
         $this->add(array(
             'name' => 'form_tipo_fone[]',
+            'type' => 'Zend\Form\Element\Select',
             'attributes' => array(
-                'type' => 'text',
-                'id' => 'nome_celular',
+                'id' => 'form_tipo_fone',
                 'class' => 'form-control input-sm',
-                'placeholder' => 'Ex.: Fixo, Celular, etc'
+                'Active' => 'Geral', //Mantém selecionado o valor '1'
+            ),
+            'options' => array(
+                'value_options' => array(
+                    'Institucional' => 'Institucional',
+                    'Celular' => 'Celular',
+                    'Geral' => 'Geral',
+                ),
             ),
         ));
+        
         $this->add(array(
             'name' => 'form_email[]',
             'attributes' => array(
@@ -116,6 +124,23 @@ class ContatosForm extends Form {
                 'id' => 'nome_email',
                 'class' => 'form-control input-sm',
                 'placeholder' => 'Ex.: Particular, Institucional, etc'
+            ),
+        ));
+        
+        $this->add(array(
+            'name' => 'form_tipo_email[]',
+            'type' => 'Zend\Form\Element\Select',
+            'attributes' => array(
+                'id' => 'form_tipo_email',
+                'class' => 'form-control input-sm',
+                'Active' => 'Institucional', //Mantém selecionado o valor '1'
+            ),
+            'options' => array(
+                'value_options' => array(
+                    'Institucional' => 'Institucional',
+                    'Celular' => 'Pessoal',
+                    'Geral' => 'Outro',
+                ),
             ),
         ));
         
