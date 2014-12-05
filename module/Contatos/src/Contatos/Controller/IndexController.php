@@ -92,7 +92,6 @@ class IndexController extends AbstractActionController
         }
         
         $contato = $this->getContatosTable()->getContato($id);
-
         $form = new ContatosForm();
         $form->bind($contato);
         
@@ -102,8 +101,9 @@ class IndexController extends AbstractActionController
             $contato = $request->getPost();
             
             $view = new ViewModel(array(
-                'actions' => $contato,
                 'mensagem' => $this->getContatosTable()->saveContato($contato),
+                'emails' => $this->getContatosTable()->getEmails($id),
+                'fones' => $this->getContatosTable()->getFones($id),
                 'form_codigo' => $id,
                 'form' => $form,
             ));
@@ -111,7 +111,8 @@ class IndexController extends AbstractActionController
             return $view;
         }
         $view = new ViewModel(array(
-            'actions' => $contato,
+            'emails' => $this->getContatosTable()->getEmails($id),
+            'fones' => $this->getContatosTable()->getFones($id),
             'form_codigo' => $id,
             'form' => $form,
         ));

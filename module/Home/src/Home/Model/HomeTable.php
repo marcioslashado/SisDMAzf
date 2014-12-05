@@ -23,7 +23,68 @@ class HomeTable extends AbstractTableGateway {
         $this->initialize();
     }
 
-    public function getAgenda(Select $select = null) {
+    //GAMBIARRA FEIA - DIA
+    public function getAgendaDia(Select $select = null) {
+        $date = new \DateTime();
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('a' => 'agenda'));
+        $select->columns(array(
+            'id_agenda' => 'id_agenda',
+            'start_date' => 'start_date',
+            'end_date' => 'end_date',
+            'text' => 'text',
+            'details' => 'details',
+            'convidados' => 'convidados',
+            'event_location' => 'event_location'
+        ))
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(start_date) = ?', $date->format('m'))); //Seleciona por mês
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(start_date) = ?', $date->format('d'))); //Seleciona por Dia
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (start_date) = WEEK(current_date) AND YEAR(start_date) = YEAR(current_date)')); //Seleciona por semana
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(start_date) = ?', $date->format('Y'))); //Seleciona por Ano
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $current_date = new \DateTime();
+            $selectData[] = $res;
+        }
+        return $selectData;
+    }
+
+    //GAMBIARRA FEIA - SEMANA
+    public function getAgendaSemana(Select $select = null) {
+        $date = new \DateTime();
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('a' => 'agenda'));
+        $select->columns(array(
+            'id_agenda' => 'id_agenda',
+            'start_date' => 'start_date',
+            'end_date' => 'end_date',
+            'text' => 'text',
+            'details' => 'details',
+            'convidados' => 'convidados',
+            'event_location' => 'event_location'
+        ))
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(start_date) = ?', $date->format('m'))); //Seleciona por mês
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(start_date) = ?', $date->format('d'))); //Seleciona por Dia
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (start_date) = WEEK(current_date) AND YEAR(start_date) = YEAR(current_date)')); //Seleciona por semana
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(start_date) = ?', $date->format('Y'))); //Seleciona por Ano
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $current_date = new \DateTime();
+            $selectData[] = $res;
+        }
+        return $selectData;
+    }
+
+    //GAMBIARRA FEIA - MES
+    public function getAgendaMes(Select $select = null) {
         $date = new \DateTime();
         $sql = new Sql($this->adapter);
         $select = new Select(array('a' => 'agenda'));
@@ -47,33 +108,36 @@ class HomeTable extends AbstractTableGateway {
         $selectData = array();
         foreach ($retorno as $res) {
             $current_date = new \DateTime();
-            $selectData[] = array(
-                'id' => $res['id_agenda'],
-                'start_date' => $res['start_date'],
-                'end_date' => $res['end_date'],
-                'text' => $res['text'],
-                'details' => $res['details'],
-                'convidados' => $res['convidados'],
-                'event_location' => $res['event_location']
-            );
+            $selectData[] = $res;
         }
         return $selectData;
     }
 
-    public function getLigacoes(Select $select = null) {
+    public function getComunicacoesDia(Select $select = null) {
         $date = new \DateTime();
         $sql = new Sql($this->adapter);
-        $select = new Select(array('l' => 'ligacoes'));
+        $select = new Select(array('c' => 'comunicacoes'));
         $select->columns(array(
-            'id_ligacao' => 'id_ligacao',
-            'membro' => 'membro',
-            'destinatario' => 'destinatario',
-            'assunto' => 'assunto',
-            'data_hora' => 'data_hora',
-            'status_ligacao' => 'status_ligacao'
-        ))
-        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(data_hora) = ?', $date->format('m'))); //Seleciona por mês
-        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(data_hora) = ?', $date->format('d'))); //Seleciona por Dia
+                    'id_comunicacao' => 'id_comunicacao',
+                    'id_projeto' => 'id_projeto',
+                    'id_etapa' => 'id_etapa',
+                    'data' => 'data',
+                    'tipo_comunicacao' => 'tipo_comunicacao',
+                    'id_contato_rem' => 'id_contato_rem',
+                    'id_contato_dest' => 'id_contato_dest',
+                    'descricao' => 'descricao',
+                    'status' => 'status'
+                ))
+                ->join(array('r' => 'contatos'), 'r.idcontatos = c.id_contato_rem', array(
+                    'r_idcontatos' => 'idcontatos',
+                    'r_nome' => 'nomecontatos',
+                        ), 'left')
+                ->join(array('d' => 'contatos'), 'd.idcontatos = c.id_contato_dest', array(
+                    'd_idcontatos' => 'idcontatos',
+                    'd_nome' => 'nomecontatos',
+                        ), 'left')
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(data_hora) = ?', $date->format('m'))); //Seleciona por mês
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(data) = ?', $date->format('d'))); //Seleciona por Dia
         //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (data_hora) = WEEK(current_date) AND YEAR(data_hora) = YEAR(current_date)')); //Seleciona por Semana
         //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(data_hora) = ?', $date->format('Y'))); //Seleciona por Ano
 
@@ -82,14 +146,83 @@ class HomeTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $selectData[] = array(
-                'id_ligacao' => $res['id_ligacao'],
-                'membro' => $res['membro'],
-                'destinatario' => $res['destinatario'],
-                'assunto' => $res['assunto'],
-                'status_ligacao' => $res['status_ligacao'],
-                'data_hora' => $res['data_hora']
-            );
+            $selectData[] = $res;
+        }
+        return $selectData;
+    }
+
+    public function getComunicacoesSemana(Select $select = null) {
+        $date = new \DateTime();
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('c' => 'comunicacoes'));
+        $select->columns(array(
+                    'id_comunicacao' => 'id_comunicacao',
+                    'id_projeto' => 'id_projeto',
+                    'id_etapa' => 'id_etapa',
+                    'data' => 'data',
+                    'tipo_comunicacao' => 'tipo_comunicacao',
+                    'id_contato_rem' => 'id_contato_rem',
+                    'id_contato_dest' => 'id_contato_dest',
+                    'descricao' => 'descricao',
+                    'status' => 'status'
+                ))
+                ->join(array('r' => 'contatos'), 'r.idcontatos = c.id_contato_rem', array(
+                    'r_idcontatos' => 'idcontatos',
+                    'r_nome' => 'nomecontatos',
+                        ), 'left')
+                ->join(array('d' => 'contatos'), 'd.idcontatos = c.id_contato_dest', array(
+                    'd_idcontatos' => 'idcontatos',
+                    'd_nome' => 'nomecontatos',
+                        ), 'left')
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(data_hora) = ?', $date->format('m'))); //Seleciona por mês
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(data) = ?', $date->format('d'))); //Seleciona por Dia
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (data) = WEEK(current_date) AND YEAR(data) = YEAR(current_date)')); //Seleciona por Semana
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(data_hora) = ?', $date->format('Y'))); //Seleciona por Ano
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = $res;
+        }
+        return $selectData;
+    }
+
+    public function getComunicacoesMes(Select $select = null) {
+        $date = new \DateTime();
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('c' => 'comunicacoes'));
+        $select->columns(array(
+                    'id_comunicacao' => 'id_comunicacao',
+                    'id_projeto' => 'id_projeto',
+                    'id_etapa' => 'id_etapa',
+                    'data' => 'data',
+                    'tipo_comunicacao' => 'tipo_comunicacao',
+                    'id_contato_rem' => 'id_contato_rem',
+                    'id_contato_dest' => 'id_contato_dest',
+                    'descricao' => 'descricao',
+                    'status' => 'status'
+                ))
+                ->join(array('r' => 'contatos'), 'r.idcontatos = c.id_contato_rem', array(
+                    'r_idcontatos' => 'idcontatos',
+                    'r_nome' => 'nomecontatos',
+                        ), 'left')
+                ->join(array('d' => 'contatos'), 'd.idcontatos = c.id_contato_dest', array(
+                    'd_idcontatos' => 'idcontatos',
+                    'd_nome' => 'nomecontatos',
+                        ), 'left')
+        ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(data) = ?', $date->format('m'))); //Seleciona por mês
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(data) = ?', $date->format('d'))); //Seleciona por Dia
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (data) = WEEK(current_date) AND YEAR(data_hora) = YEAR(current_date)')); //Seleciona por Semana
+        //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('YEAR(data) = ?', $date->format('Y'))); //Seleciona por Ano
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = $res;
         }
         return $selectData;
     }
@@ -141,4 +274,5 @@ class HomeTable extends AbstractTableGateway {
         $results = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
         return $results;
     }
+
 }

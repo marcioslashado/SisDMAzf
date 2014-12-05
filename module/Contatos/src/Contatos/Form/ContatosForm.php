@@ -138,8 +138,8 @@ class ContatosForm extends Form {
             'options' => array(
                 'value_options' => array(
                     'Institucional' => 'Institucional',
-                    'Celular' => 'Pessoal',
-                    'Geral' => 'Outro',
+                    'Pessoal' => 'Pessoal',
+                    'Outro' => 'Outro',
                 ),
             ),
         ));

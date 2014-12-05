@@ -32,20 +32,22 @@ class ContatosTable extends AbstractTableGateway {
                     'siglacontatos' => 'siglacontatos',
                     'orgaocontatos' => 'orgaocontatos',
                     'enderecoorgao' => 'enderecoorgao',
-                    'enderecoorgao' => 'enderecoorgao',
                     'cargocontato' => 'cargocontato'
                 ))
                 ->join(array('e' => 'contatos_emails'), 'e.id_contato = c.idcontatos', array(
                     'e_id' => 'id',
-                    'e_tipo' => 'tipo_email',
-                    'e_email' => 'email'
+                    'e_detalhes' => new \Zend\Db\Sql\Expression("group_concat(DISTINCT(e.email), ' (', e.tipo_email, ')' SEPARATOR ' - ')"),
+//                    'e_tipo' => 'tipo_email',
+//                    'e_email' => 'email'
                         ), 'left')
                 ->join(array('t' => 'contatos_telefones'), 't.id_contato = c.idcontatos', array(
                     't_id' => 'id',
-                    't_tipo' => 'tipo_fone',
-                    't_tel' => 'telefone',
-                    't_ramal' => 'ramal'
-                        ), 'left');
+                    't_detalhes' => new \Zend\Db\Sql\Expression("group_concat(DISTINCT(t.telefone), ' / ' , t.ramal,' (', t.tipo_fone, ')' SEPARATOR ' - ')"),
+//                    't_tipo' => 'tipo_fone',
+//                    't_tel' => 'telefone',
+//                    't_ramal' => 'ramal'
+                        ), 'left')
+                ->group('c.idcontatos');
         //->where(array('e.projeto' => $proj_id, 'e.elemento' => $el_id, 'e.fonte' => $fonte_id));
 
         $selectString = $sql->getSqlStringForSqlObject($select);
@@ -54,18 +56,6 @@ class ContatosTable extends AbstractTableGateway {
         $selectData = array();
         foreach ($retorno as $res) {
             $selectData[] = $res; //retorna logo tudo
-//            $selectData[] = array(
-//                'id_contato' => $res['idcontatos'],
-//                'nome_completo' => $res['nomecontatos'],
-//                'o_sigla' => $res['siglacontatos'],
-//                'o_nome' => $res['orgaocontatos'],
-//                'o_endereco' => $res['enderecoorgao'],
-//                'fone' => $res['telefone'],
-//                'ramal' => $res['ramalfone'],
-//                'email' => $res['emailcontato'],
-//                'celular' => $res['celcontato'],
-//                'cargo' => $res['cargocontato']
-//            );
         }
         return json_encode($selectData);
     }
@@ -83,17 +73,6 @@ class ContatosTable extends AbstractTableGateway {
                     'enderecoorgao' => 'enderecoorgao',
                     'cargocontato' => 'cargocontato'
                 ))
-                ->join(array('e' => 'contatos_emails'), 'e.id_contato = c.idcontatos', array(
-                    'e_id' => 'id',
-                    'e_tipo' => 'tipo_email',
-                    'e_email' => 'email'
-                ), 'left')
-                ->join(array('t' => 'contatos_telefones'), 't.id_contato = c.idcontatos', array(
-                    't_id' => 'id',
-                    't_tipo' => 'tipo_fone',
-                    't_tel' => 'telefone',
-                    't_ramal' => 'ramal'
-                ), 'left')
                 ->where(array('c.idcontatos' => $id));
 
         //echo $select->getSqlString(); //Exibe a consulta em SQL
@@ -103,6 +82,56 @@ class ContatosTable extends AbstractTableGateway {
             throw new \Exception("Could not find row $id");
         }
         return $row;
+    }
+
+    public function getFones($id) {
+        $sql = new Sql($this->adapter);
+        $this->table = array('t' => 'contatos_telefones');
+        $select = new Select();
+        $select->from(array('t' => 'contatos_telefones'));
+        $select->columns(array(
+                    't_id' => 'id',
+                    't_tipo' => 'tipo_fone',
+                    't_tel' => 'telefone',
+                    't_ramal' => 'ramal'
+                ))
+                ->where(array('t.id_contato' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        if (!$retorno) {
+            throw new \Exception("Could not find row $id");
+        }
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = $res;
+        }
+        return $selectData;
+    }
+
+    public function getEmails($id) {
+        $sql = new Sql($this->adapter);
+        $this->table = array('e' => 'contatos_emails');
+        $select = new Select();
+        $select->from(array('e' => 'contatos_emails'));
+        $select->columns(array(
+                    'e_id' => 'id',
+                    'e_id_contato' => 'id_contato',
+                    'e_tipo' => 'tipo_email',
+                    'e_email' => 'email'
+                ))
+                ->where(array('e.id_contato' => $id));
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        if (!$retorno) {
+            throw new \Exception("Could not find row $id");
+        }
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = $res;
+        }
+        return $selectData;
     }
 
     public function saveContato($contato) {
@@ -168,34 +197,59 @@ class ContatosTable extends AbstractTableGateway {
                 return $results_tel;
                 return $results_email;
             }
-        } else {
-            if ($this->getPermissions($id)) {
+        } 
+        else {
+            if ($this->getContato($id)) {
                 $role = array(
-                    'rid' => $id,
-                    'role_name' => $grupo_titulo,
-                    'status' => $grupo_status,
+                    'nomecontatos' => $form_nome,
+                    'siglacontatos' => $form_sigla,
+                    'orgaocontatos' => $form_orgao,
+                    'enderecoorgao' => $form_endereco,
+                    'cargocontato' => $form_cargo,
                 );
 
-                $query = $sql->update('role');
+                $query = $sql->update('contatos');
                 $query->set($role);
-                $query->where(array('rid' => $id));
+                $query->where(array('idcontatos' => $id));
                 $selectString = $sql->getSqlStringForSqlObject($query);
                 $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
 
-                $delete = new TableGateway('role_permission', $this->adapter);
-                $delete->delete(array('role_id' => $id));
+                $delete_emails = new TableGateway('contatos_emails', $this->adapter);
+                $delete_emails->delete(array('id_contato' => $id));
+                $delete_tels = new TableGateway('contatos_telefones', $this->adapter);
+                $delete_tels->delete(array('id_contato' => $id));
 
-                foreach ($grupo_modulo as $k => $v) {
-                    $data_arr = array(
-                        'role_id' => $id,
-                        'permission_nome' => $v,
+                //Telefone
+                foreach (array_map(NULL, $form_telefone, $form_ramal, $form_tipo_fone) as $x) {
+                    list($form_telefone, $form_ramal, $form_tipo_fone) = $x;
+                    //echo "$form_telefone $form_ramal $form_tipo_fone\n";
+                    $telefones = array(
+                        'id_contato' => $id,
+                        'tipo_fone' => $form_tipo_fone,
+                        'telefone' => $form_telefone,
+                        'ramal' => $form_ramal
                     );
-                    $query2 = $sql->insert('role_permission');
-                    $query2->values($data_arr);
+
+                    $query2 = $sql->insert('contatos_telefones');
+                    $query2->values($telefones);
                     $selectString2 = $sql->getSqlStringForSqlObject($query2);
-                    $results = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
+                    $results_tel = $this->adapter->query($selectString2, Adapter::QUERY_MODE_EXECUTE);
                 }
-                return $results;
+                foreach (array_map(NULL, $form_email, $form_tipo_email) as $x) {
+                    list($form_email, $form_tipo_email) = $x;
+                    $emails = array(
+                        'id_contato' => $id,
+                        'tipo_email' => $form_tipo_email,
+                        'email' => $form_email
+                    );
+
+                    $query3 = $sql->insert('contatos_emails');
+                    $query3->values($emails);
+                    $selectString3 = $sql->getSqlStringForSqlObject($query3);
+                    $results_email = $this->adapter->query($selectString3, Adapter::QUERY_MODE_EXECUTE);
+                }
+                return $results_tel;
+                return $results_email;
             } else {
                 throw new \Exception('Form id does not exist');
             }

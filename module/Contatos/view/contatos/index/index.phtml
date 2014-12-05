@@ -84,27 +84,29 @@
                     <div class="col-md-12" ng-show="filteredItems > 0">
                         <table class="table table-striped table-bordered">
                             <thead>
-                            <th>ID&nbsp;<a ng-click="sort_by('id_contato');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th>Nome&nbsp;<a ng-click="sort_by('nome_completo');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th>Sigla&nbsp;<a ng-click="sort_by('o_sigla');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th>Cargo&nbsp;<a ng-click="sort_by('cargo');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th>Telefone/Ramal&nbsp;<a ng-click="sort_by('fone');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th>Celular&nbsp;<a ng-click="sort_by('celular');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th>Email&nbsp;<a ng-click="sort_by('email');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>ID&nbsp;<a ng-click="sort_by('idcontatos');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Nome&nbsp;<a ng-click="sort_by('nomecontatos');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Sigla&nbsp;<a ng-click="sort_by('siglacontatos');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Órgão&nbsp;<a ng-click="sort_by('orgaocontatos');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Endereço&nbsp;<a ng-click="sort_by('enderecoorgao');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Cargo&nbsp;<a ng-click="sort_by('cargocontato');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Telefone/Ramal&nbsp;<a ng-click="sort_by('t_detalhes');"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Email&nbsp;<a ng-click="sort_by('e_detalhes');"><i class="glyphicon glyphicon-sort"></i></a></th>
                             <th></th>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="data in filtered = (list| filter:search | orderBy : predicate :reverse) | startFrom:(currentPage - 1) * entryLimit | limitTo:entryLimit">
-                                    <td>{{data.id_contato}}</td>
-                                    <td>{{data.nome_completo}}</td>
-                                    <td>{{data.o_sigla}}</td>
-                                    <td>{{data.cargo}}</td>
-                                    <td>{{data.fone}} / {{data.ramal}}</td>
-                                    <td>{{data.celular}}</td>
-                                    <td>{{data.email}}</td>
+                                    <td>{{data.idcontatos}}</td>
+                                    <td>{{data.nomecontatos}}</td>
+                                    <td>{{data.siglacontatos}}</td>
+                                    <td>{{data.orgaocontatos}}</td>
+                                    <td>{{data.enderecoorgao}}</td>
+                                    <td>{{data.cargocontato}}</td>
+                                    <td>{{data.t_detalhes}}</td>
+                                    <td>{{data.e_detalhes}}</td>
                                     <td>
-                                        <a href="<?php echo $this->url('contatos', array('action' => 'edit', 'form_codigo')); ?>/{{data.id_contato}}" data-toggle="tooltip" data-placement="left" data-original-title="Editar"><span class="glyphicon" data-icon=""></span></a>
-                                        <a href="<?php echo $this->url('contatos', array('action' => 'del', 'form_codigo')); ?>/{{data.id_contato}}" data-toggle="tooltip" data-placement="left" data-original-title="Excluir"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
+                                        <a href="<?php echo $this->url('contatos', array('action' => 'edit', 'form_codigo')); ?>/{{data.idcontatos}}" data-toggle="tooltip" data-placement="left" data-original-title="Editar"><span class="glyphicon" data-icon=""></span></a>
+                                        <a href="<?php echo $this->url('contatos', array('action' => 'del', 'form_codigo')); ?>/{{data.idcontatos}}" data-toggle="tooltip" data-placement="left" data-original-title="Excluir"><span class="glyphicon" data-icon="&#xe1d6;"></span></a>
                                     </td>
                                 </tr>
                             </tbody>

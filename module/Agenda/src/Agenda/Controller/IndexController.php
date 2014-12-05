@@ -104,6 +104,22 @@ class IndexController extends AbstractActionController {
         }
         exit();
     }
+    
+    public function viewAction()
+    {
+        $id = (int)$this->params('form_codigo');
+        if (!$id) {
+            return $this->redirect()->toRoute('agenda');
+        }        
+        
+        $detalhe = $this->getAgendaTable()->getDetalhes($id);
+        $view = new ViewModel(array(
+            'form_codigo' => $id,
+            'agenda' => $detalhe, 
+        ));
+        $view->setTemplate('agenda/index/detalhes');
+        return $view;
+    }
 
     public function indexAction() {
         $view = new ViewModel(array(
