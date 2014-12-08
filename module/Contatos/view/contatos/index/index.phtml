@@ -92,7 +92,7 @@
                             <th>Cargo&nbsp;<a ng-click="sort_by('cargocontato');"><i class="glyphicon glyphicon-sort"></i></a></th>
                             <th>Telefone/Ramal&nbsp;<a ng-click="sort_by('t_detalhes');"><i class="glyphicon glyphicon-sort"></i></a></th>
                             <th>Email&nbsp;<a ng-click="sort_by('e_detalhes');"><i class="glyphicon glyphicon-sort"></i></a></th>
-                            <th></th>
+                            <th style="width: 50px;"></th>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="data in filtered = (list| filter:search | orderBy : predicate :reverse) | startFrom:(currentPage - 1) * entryLimit | limitTo:entryLimit">
