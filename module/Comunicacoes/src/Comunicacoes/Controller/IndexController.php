@@ -20,6 +20,7 @@ class IndexController extends AbstractActionController
 {
     protected $comunicacoesTable;
     protected $homeTable;
+    protected $contatosTable;
     
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
         $this->headTitleHelper = $this->getServiceLocator()->get('viewHelperManager')->get('headTitle');
@@ -34,6 +35,22 @@ class IndexController extends AbstractActionController
         }
         return $this->homeTable;
     }
+    
+    public function getComunicacoesTable() {
+        if (!$this->comunicacoesTable) {
+            $sm = $this->getServiceLocator();
+            $this->comunicacoesTable = $sm->get('Comunicacoes\Model\ComunicacoesTable');
+        }
+        return $this->comunicacoesTable;
+    }
+    
+    public function getContatosTable() {
+        if (!$this->contatosTable) {
+            $sm = $this->getServiceLocator();
+            $this->contatosTable = $sm->get('Contatos\Model\ContatosTable');
+        }
+        return $this->contatosTable;
+    }
 
     public function updateUserAction() {
         $request = $this->getRequest();
@@ -44,14 +61,6 @@ class IndexController extends AbstractActionController
             exit();
         }
         exit();
-    }
-    
-    public function getComunicacoesTable() {
-        if (!$this->comunicacoesTable) {
-            $sm = $this->getServiceLocator();
-            $this->comunicacoesTable = $sm->get('Comunicacoes\Model\ComunicacoesTable');
-        }
-        return $this->comunicacoesTable;
     }
     
     public function listacomunicacoesAction()
@@ -79,7 +88,7 @@ class IndexController extends AbstractActionController
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
-                'contatos' => $this->getComunicacoesTable()->getContatos(),
+                'contatos' => $this->getContatosTable()->getContatos(),
                 'mensagem' => $this->getComunicacoesTable()->saveComunicacao($comunicacao),
                 'form' => $form
             ));
@@ -88,7 +97,7 @@ class IndexController extends AbstractActionController
         }
         
         $view = new ViewModel(array(
-            'contatos' => $this->getComunicacoesTable()->getContatos(),
+            'contatos' => $this->getContatosTable()->getContatos(),
             'form' => $form
         ));
         $view->setTemplate('comunicacoes/index/add');

@@ -1,225 +1,20 @@
 <?php
 $this->headLink()->prependStylesheet($this->basePath() . '/css/jquery.datetimepicker.css');
+$this->headLink()->prependStylesheet($this->basePath() . '/js/multisearch/bootstrap-tagsinput.css');
+$this->headLink()->prependStylesheet($this->basePath() . '/js/multisearch/app.css');
 $this->headScript()->prependFile($this->basePath() . '/js/jquery.datetimepicker.js');
-echo $this->headScript()
-        ->prependFile($this->basePath() . '/js/jqueryui-multisearch.js')
-        ->prependFile($this->basePath() . '/js/lodash.underscore.min.js')
-        ->prependFile($this->basePath() . '/js/jquery-ui.js');
 ?>  
-<style>
-    textarea {
-        resize: none;
-        font-size: 12px !important;
-    }
 
-    input[data-role="input"] {
-        outline: none;
-        border: none;
-        font-size: 12px;
-        color: #555;
-        vertical-align: middle;
-        padding: 3px 4px;
-        margin: 3px;
-    }
-
-    input.error {
-        color: #f00;
-    }
-
-    [data-role="picker"] {
-        z-index: 1080;
-    }
-
-    a:focus {
-        outline: none;
-    }
-
-    a.list-group-item.hover {
-        background-color: #F5F5F5;
-        text-decoration: none;
-    }
-
-    a.label-default {
-        cursor: pointer;
-        font-size: 12px;
-        margin: 3px;
-        color: #555;
-        background-color: #F7F7F7;
-        text-decoration: none;
-    }
-
-    a.label-default.hover {
-        background-color: #DFDFDF;
-        text-decoration: none;
-    }
-
-    a.label-default.active {
-        text-decoration: none;
-    }
-
-    .panel {
-        margin: 0;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    }
-
-    .panel.focus {
-        border-color: #66AFE9;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
-        outline: 0 none;
-    }
-
-    .panel-body {
-        padding: 3px 6px;
-    }
-
-    .popover {
-        max-width: 347px;
-        min-width: 276px;
-    }
-
-    .popover-content {
-        overflow: hidden;
-        font-size: 90%;
-    }
-
-    .popover-content .col-lg-4, .popover-content .col-lg-8 {
-        padding: 0 5px
-    }
-</style>
-<script id="multisearch" type="text/template">
-    <div>
-    <div class="panel panel-default">
-    <div data-role="selected-list" class="panel-body">
-    <input class="pull-left" data-role="input" type="text" placeholder=""/>
-    </div>
-    </div>
-    <div data-role="picker" class="panel panel-default">
-    <div class="list-group" data-role="picker-list">
-    </div>
-    </div>
-    </div>
-</script>
-
-<script id="contact-item" type="text/template">
-    <a class="list-group-item" href="#">
-    <small><%= nome_contato %> (<%= end_email %>)</small>
-    </a>
-</script>
-
-<script id="selected-item" type="text/template">
-    <a class="label label-default pull-left"><%= nome_contato %>&nbsp;<span class="glyphicon glyphicon-remove" data-action="remove" aria-hidden="true"></span></a>
-</script>
-
-<script id="contact-info" type="text/template">
-    <div class="popover bottom fade">
-    <div class="arrow"></div>
-    <h3 class="popover-title"><b><%= nome_contato %></b></h3>
-    <div class="popover-content">
-
-    <div class="row">
-    <div class="col-lg-4 text-right"><strong>Órgão</strong></div>
-    <div class="col-lg-8"><%= sigla_orgao %></div>
-    </div>
-
-    <div class="row">
-    <div class="col-lg-4 text-right"><strong>Email</strong></div>
-    <div class="col-lg-8"><%= end_email %> (<%= tipo_email %>)</div>
-    </div>
-
-    <div class="row">
-    <div class="col-lg-4 text-right"><strong>Cargo</strong></div>
-    <div class="col-lg-8"><%= cargo_contato %></div>
-    </div>
-
-    </div>
-    </div>
-</script>
 <script>
     $(document).ready(function() {
-        auto_complete();
         jQuery('#datahora').datetimepicker({
             format: 'Y-m-d H:i:s',
             inline: true,
             lang: 'pt'
         });
     });
-    function auto_complete() {
-        var multiSearch = _.template($('#multisearch').html()),
-                infoBox = _.template($('#contact-info').html());
-        // Since you can tab through fields, redirect the focus
-        // event to click just in case.
-        $(document.body).on('focusin', 'input, textarea', function(event) {
-            $(event.target).trigger('click');
-        });
-        $('div[data-control="multisearch"]').append(multiSearch())
-                .children()
-
-                .on('click', function simulateFocus(event) {
-                    var $me = $(this),
-                            $panel = $me.find('.panel');
-                    if (!$panel.is('.focus')) {
-
-                        $panel.addClass('focus');
-                        _.defer(function() {
-                            $(document.body).on('click.focus', function(e) {
-                                if ($me.has(e.target).length === 0) {
-                                    $panel.removeClass('focus');
-                                    $(document.body).off('click.focus');
-                                }
-                            });
-                        });
-                    }
-
-                })
-
-                .multisearch({
-                    source: <?php echo json_encode($this->contatos); ?>,
-                    keyAttrs: ['id_email'],
-                    searchAttrs: ['nome_contato', 'end_email', 'sigla_orgao'],
-                    formatPickerItem: _.template($('#contact-item').html()),
-                    formatSelectedItem: _.template($('#selected-item').html()),
-                    buildNewItem: function(text) {
-                        return {id_email: text, nome_contato: text, sigla_orgao: text, primary_email: text, tipo_email: text};
-                    },
-                    adding: function(event, ui) {
-                        var validater = new RegExp('^(?:[^,]+@[^,/]+\.[^,/]+|)$');
-                        
-                        var TxtInput = $("#origem");
-                        $(TxtInput).val(TxtInput.val() + ui.data.id_email);
-
-                        $(this).find('input').removeClass('error');
-                        if (ui.notfound) {
-                            if (!validater.test(ui.data.id_email)) {
-                                $(this).find('input').addClass('error');
-                                return false;
-                            }
-                        }
-                    },
-                    itemselect: function(event, ui) {
-                        // Generate from template and add to DOM
-                        var $info = $(infoBox(ui.data)).insertAfter($(this)).show();
-                        // Use jQueryUI Position utility to move it to the right spot
-                        $info.position({
-                            my: 'center top+10',
-                            at: 'center bottom',
-                            of: ui.element
-                        });
-                        $info.addClass('in');
-                        _.defer(function() {
-                            $(document).on('click.info', function(e) {
-                                if ($info.has(e.target).length === 0) {
-                                    $info.removeClass('in');
-                                    _.delay(function() {
-                                        $info.remove();
-                                    }, 500);
-                                    $(document).off('click.info');
-                                }
-                            });
-                        });
-                    },
-                });
-    }
 </script>
+
 <?php
 $title = 'Agendando Comunicação';
 $this->headTitle($title);
@@ -263,16 +58,12 @@ $this->headTitle($title);
         <div class="row">
             <div class="col-md-6">
                 <label class="control-label" for="form_origem">Remetente</label>
-                <?php //echo $this->formRow($form->get('form_origem')) . PHP_EOL;  ?>
-                <div data-control="multisearch" size="32" class="form_origem"></div>
-                <input type="text" name="origem" id="origem"/>
+                <?php echo $this->formRow($form->get('form_origem')) . PHP_EOL;  ?>
                 <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-6">
                 <label class="control-label" for="form_destino">Destinatário</label>
-                <?php //echo $this->formRow($form->get('form_destino')) . PHP_EOL;  ?>
-                <div data-control="multisearch" size="32" class="destino"></div>
-                <input type="text" name="destino" id="destino"/>
+                <?php echo $this->formRow($form->get('form_destino')) . PHP_EOL;  ?>
                 <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
@@ -323,4 +114,31 @@ $this->headTitle($title);
             }
         });
     }
+</script>
+
+<script src="<?php echo $this->basePath() . '/js/multisearch/typeahead.bundle.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/js/multisearch/bootstrap-tagsinput.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/js/multisearch/app.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/js/multisearch/app_bs3.js'; ?>"></script>
+
+<script>
+var contatos = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nomecontatos'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '<?php echo $this->basePath() . '/js/multisearch/contatos.json'; ?>'
+  //prefetch: '<?php echo $this->url('contatos', array('action' => 'listacontatos')); ?>'
+});
+contatos.initialize();
+
+var elt = $('#form_origem');
+elt.tagsinput({
+  //maxTags: 3, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+  itemValue: 'idcontatos',
+  itemText: 'nomecontatos',
+  typeaheadjs: {
+    name: 'contatos',
+    displayKey: 'nomecontatos',
+    source: contatos.ttAdapter()
+  }
+});
 </script>

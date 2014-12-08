@@ -34,7 +34,7 @@ class ComunicacoesForm extends Form {
                 'type' => 'text',
                 'id' => 'form_origem',
                 'class' => 'form-control input-sm',
-                'placeholder' => 'Membro da Equipe',
+                'placeholder' => '',
                 'required' => 'required',
             ),
         ));
@@ -44,7 +44,7 @@ class ComunicacoesForm extends Form {
                 'type' => 'text',
                 'id' => 'form_destino',
                 'class' => 'form-control input-sm',
-                'placeholder' => 'Contato da Ligação',
+                'placeholder' => '',
                 'required' => 'required',
             ),
         ));
