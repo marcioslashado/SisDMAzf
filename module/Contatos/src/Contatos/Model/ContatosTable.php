@@ -59,6 +59,33 @@ class ContatosTable extends AbstractTableGateway {
         }
         return json_encode($selectData);
     }
+    
+    public function getListaEmails(Select $select = null) {
+        $sql = new Sql($this->adapter);
+        $select = new Select(array('c' => 'contatos'));
+        $select->columns(array(
+                    'idcontatos' => 'idcontatos',
+                    'nomecontatos' => 'nomecontatos',
+                    'siglacontatos' => 'siglacontatos',
+                    'orgaocontatos' => 'orgaocontatos',
+                    'enderecoorgao' => 'enderecoorgao',
+                    'cargocontato' => 'cargocontato'
+                ))
+                ->join(array('e' => 'contatos_emails'), 'e.id_contato = c.idcontatos', array(
+                    'e_id' => 'id',
+                    'e_tipo' => 'tipo_email',
+                    'e_email' => 'email'
+        ), 'left');
+        
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = $res; //retorna logo tudo
+        }
+        return json_encode($selectData);
+    }
 
     public function getContato($id) {
         $this->table = array('c' => 'contatos');

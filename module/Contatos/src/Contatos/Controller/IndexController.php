@@ -59,6 +59,11 @@ class IndexController extends AbstractActionController
         echo $this->getContatosTable()->getContatos();
         exit();
     }
+    public function listaemailsAction()
+    {
+        echo $this->getContatosTable()->getListaEmails();
+        exit();
+    }
     
     public function addAction()
     {

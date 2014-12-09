@@ -88,7 +88,6 @@ class IndexController extends AbstractActionController
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
-                'contatos' => $this->getContatosTable()->getContatos(),
                 'mensagem' => $this->getComunicacoesTable()->saveComunicacao($comunicacao),
                 'form' => $form
             ));
@@ -97,7 +96,6 @@ class IndexController extends AbstractActionController
         }
         
         $view = new ViewModel(array(
-            'contatos' => $this->getContatosTable()->getContatos(),
             'form' => $form
         ));
         $view->setTemplate('comunicacoes/index/add');

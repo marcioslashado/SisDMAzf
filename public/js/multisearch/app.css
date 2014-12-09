@@ -1,18 +1,4 @@
-.icon-github {
-    background: no-repeat url('../img/github-16px.png');
-    width: 16px;
-    height: 16px;
-}
-
 .bootstrap-tagsinput { width: 100%; }
-
-.accordion {
-	margin-bottom:-3px;
-}
-
-.accordion-group { 
-	border: none;
-}
 
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
@@ -31,11 +17,11 @@
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
+  min-width: 200px;
   padding: 5px 0;
   margin: 2px 0 0;
   list-style: none;
-  font-size: 14px;
+  font-size: 12px;
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -52,6 +38,7 @@
   line-height: 1.428571429;
   color: #333333;
   white-space: nowrap;
+  border-bottom: solid 1px #F7F7F7;
 }
 .tt-suggestion > p:hover,
 .tt-suggestion > p:focus,
