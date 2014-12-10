@@ -11,6 +11,14 @@ class Comunicacoes implements InputFilterAwareInterface {
 
     protected $inputFilter;
     public $id_comunicacao;
+    public $id_projeto;
+    public $id_etapa;
+    public $data;
+    public $tipo_comunicacao;
+    public $id_contato_rem;
+    public $id_contato_dest;
+    public $descricao;
+    public $status;
 
     /**
      * Para o Form
@@ -21,6 +29,7 @@ class Comunicacoes implements InputFilterAwareInterface {
     public $form_assunto;
     public $form_data;
     public $form_status;
+    public $form_tipo;
     public $form_projeto;
     public $form_etapas;
 
@@ -29,29 +38,28 @@ class Comunicacoes implements InputFilterAwareInterface {
      */
     public function exchangeArray($data) {
         $this->id_comunicacao = (isset($data['id_comunicacao'])) ? $data['id_comunicacao'] : null;
-        $this->l_membro = (isset($data['l_membro'])) ? $data['l_membro'] : null;
-        $this->l_destino = (isset($data['l_destino'])) ? $data['l_destino'] : null;
-        $this->l_assunto = (isset($data['l_assunto'])) ? $data['l_assunto'] : null;
-        $this->l_data = (isset($data['l_data'])) ? $data['l_data'] : null;
-        $this->l_status = (isset($data['l_status'])) ? $data['l_status'] : null;
-        $this->ll_id = (isset($data['ll_id'])) ? $data['ll_id'] : null;
-        $this->ll_ligacao = (isset($data['ll_ligacao'])) ? $data['ll_ligacao'] : null;
-        $this->ll_data = (isset($data['ll_data'])) ? $data['ll_data'] : null;
-        $this->ll_duracao = (isset($data['ll_duracao'])) ? $data['ll_duracao'] : null;
-        $this->ll_nota = (isset($data['ll_nota'])) ? $data['ll_nota'] : null;
+        $this->id_projeto = (isset($data['id_projeto'])) ? $data['id_projeto'] : null;
+        $this->id_etapa = (isset($data['id_etapa'])) ? $data['id_etapa'] : null;
+        $this->data = (isset($data['data'])) ? $data['data'] : null;
+        $this->tipo_comunicacao = (isset($data['tipo_comunicacao'])) ? $data['tipo_comunicacao'] : null;
+        $this->id_contato_rem = (isset($data['id_contato_rem'])) ? $data['id_contato_rem'] : null;
+        $this->id_contato_dest = (isset($data['id_contato_dest'])) ? $data['id_contato_dest'] : null;
+        $this->descricao = (isset($data['descricao'])) ? $data['descricao'] : null;
+        $this->status = (isset($data['status'])) ? $data['status'] : null;
         
         /**
          * Registro de campos do Formulário
          * Necessários para a ação de CRUD
          */
-        $this->form_codigo = (isset($data['l_id'])) ? $data['l_id'] : null;
-        $this->form_origem = (isset($data['l_membro'])) ? $data['l_membro'] : null;
-        $this->form_destino = (isset($data['l_destino'])) ? $data['l_destino'] : null;
-        $this->form_assunto = (isset($data['l_assunto'])) ? $data['l_assunto'] : null;
-        $this->form_data = (isset($data['l_data'])) ? $data['l_data'] : null;
-        $this->form_status = (isset($data['l_status'])) ? $data['l_status'] : null;
-        $this->form_projeto = (isset($data['l_status'])) ? $data['l_status'] : null;
-        $this->form_etapas = (isset($data['l_status'])) ? $data['l_status'] : null;
+        $this->form_codigo = (isset($data['id_comunicacao'])) ? $data['id_comunicacao'] : null;
+        $this->form_origem = (isset($data['id_contato_rem'])) ? $data['id_contato_rem'] : null;
+        $this->form_destino = (isset($data['id_contato_dest'])) ? $data['id_contato_dest'] : null;
+        $this->form_assunto = (isset($data['descricao'])) ? $data['descricao'] : null;
+        $this->form_data = (isset($data['data'])) ? $data['data'] : null;
+        $this->form_status = (isset($data['status'])) ? $data['status'] : null;
+        $this->form_tipo = (isset($data['tipo_comunicacao'])) ? $data['tipo_comunicacao'] : null;
+        $this->form_projeto = (isset($data['id_projeto'])) ? $data['id_projeto'] : null;
+        $this->form_etapas = (isset($data['id_etapa'])) ? $data['id_etapa'] : null;
     }
 
     public function getArrayCopy() {
@@ -94,6 +102,10 @@ class Comunicacoes implements InputFilterAwareInterface {
             )));
             $inputFilter->add($factory->createInput(array(
                         'name' => 'form_status',
+                        'required' => true
+            )));
+            $inputFilter->add($factory->createInput(array(
+                        'name' => 'form_tipo',
                         'required' => true
             )));
             $inputFilter->add($factory->createInput(array(

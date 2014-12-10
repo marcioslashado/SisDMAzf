@@ -82,7 +82,6 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         
         if ($request->isPost()) {
-            print_r($_POST);
             $comunicacao = new Comunicacoes();
             $form->setData($request->getPost());
             $comunicacao = $request->getPost();
@@ -103,13 +102,14 @@ class IndexController extends AbstractActionController
     }
     
     public function editAction() {
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('form_codigo');
         if (!$id) {
             return $this->redirect()->toRoute('comunicacoes', array('action'=>'add'));
         }
+        
         $comunicacao = $this->getComunicacoesTable()->getComunicacao($id);
-
-        $form = new ComunicacoesForm();
+        $form = new ComunicacoesForm($dbAdapter);
         $form->bind($comunicacao);
         
         $request = $this->getRequest();
@@ -118,8 +118,6 @@ class IndexController extends AbstractActionController
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
-                'contatos' => $this->getComunicacoesTable()->getContatos(),
-                'mensagem' => $this->getComunicacoesTable()->saveLigacao($comunicacao),
                 'form_codigo' => $id,
                 'form' => $form,
             ));
@@ -127,7 +125,6 @@ class IndexController extends AbstractActionController
             return $view;
         }
         $view = new ViewModel(array(
-            'contatos' => $this->getComunicacoesTable()->getContatos(),
             'form_codigo' => $id,
             'form' => $form,
         ));

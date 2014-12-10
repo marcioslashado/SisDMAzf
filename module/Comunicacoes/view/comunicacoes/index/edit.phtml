@@ -1,23 +1,23 @@
 <?php
 $this->headLink()->prependStylesheet($this->basePath() . '/css/jquery.datetimepicker.css');
+$this->headLink()->prependStylesheet($this->basePath() . '/js/multisearch/bootstrap-tagsinput.css');
+$this->headLink()->prependStylesheet($this->basePath() . '/js/multisearch/app.css');
 $this->headScript()->prependFile($this->basePath() . '/js/jquery.datetimepicker.js');
 ?>  
+
 <script>
     $(document).ready(function() {
         jQuery('#datahora').datetimepicker({
             format: 'Y-m-d H:i:s',
-            allowTimes: ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-                '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-                '16:00', '16:30', '17:00', '17:30'],
             inline: true,
             lang: 'pt'
         });
     });
 </script>
-<?php
-$title = 'Editando Ligação';
-$this->headTitle($title);
 
+<?php
+$title = 'Editando Comunicação';
+$this->headTitle($title);
 ?>
 <div class="container-fluid">
     <div class="table-responsive">
@@ -30,37 +30,134 @@ $this->headTitle($title);
         <legend><?php echo $this->escapeHtml($title); ?></legend>
         <?php echo $this->formHidden($form->get('form_codigo')) . PHP_EOL; ?>
         <?php if ($this->mensagem) { ?>
-            <div style="margin-top:10px;"><div class="alert alert-success">Ligação editada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('ligacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Ligações</a></div></div>
+            <div style="margin-top:10px;"><div class="alert alert-success">Comunicação agendada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('comunicacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Comunicações</a></div></div>
         <?php } ?>
 
         <div class='row'>
+            <div class="col-md-2">
+                <label class="control-label" for="form_status">Status</label>
+                <?php echo $this->formRow($form->get('form_status')) . PHP_EOL; ?>
+                <span class="help-block">Status deste Contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-2">
+                <label class="control-label" for="form_tipo">Tipo</label>
+                <?php echo $this->formRow($form->get('form_tipo')) . PHP_EOL; ?>
+                <span class="help-block">Tipo de Comunicação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-4">
+                <label class="control-label" for="form_projeto">Projeto</label>
+                <?php echo $this->formRow($form->get('form_projeto')) . PHP_EOL; ?>
+                <span class="help-block">Selecione um Projeto caso esteja envolvido <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+            <div class="col-md-4">
+                <label class="control-label" for="form_etapas">Etapa</label>
+                <?php echo $this->formRow($form->get('form_etapas')) . PHP_EOL; ?>
+                <span class="help-block">Selecione uma Etapa caso esteja envolvida <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
-                <label class="control-label" for="membro">Origem/Membro</label>
-                <?php echo $this->formRow($form->get('form_origem')) . PHP_EOL; ?>
-                <span class="help-block">Digite ou selecione um membro <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Digite ou selecione um membro"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <label class="control-label" for="form_origem">Remetente</label>
+                <?php echo $this->formRow($form->get('form_origem')) . PHP_EOL;  ?>
+                <span class="help-block">Digite ou selecione o Remetente <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Apenas 1 poderá ser selecionado. Contatos sem endereço de email não poderão ser selecionados."> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-6">
-                <label class="control-label" for="destinatario">Destinatário</label>
-                <?php echo $this->formRow($form->get('form_destino')) . PHP_EOL; ?>
-                <span class="help-block">Digite ou selecione um destinatário <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Para quem a ligação será realizada?"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <label class="control-label" for="form_destino">Destinatário</label>
+                <?php echo $this->formRow($form->get('form_destino')) . PHP_EOL;  ?>
+                <span class="help-block">Digite ou selecione os destinatários <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Selecione os destinatários que receberão esta comunicação. Contatos sem endereço de email não poderão ser selecionados."> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
         <div class='row'>
             <div class="col-md-9">
-                <label class="control-label" for="assunto">Assunto</label>
+                <label class="control-label" for="form_assunto">Assunto</label>
                 <?php echo $this->formRow($form->get('form_assunto')) . PHP_EOL; ?>
-                <span class="help-block">Assunto da Ligação <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <span class="help-block">Assunto deste contato <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Qual assunto será tratado nesta ligação?"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
             <div class="col-md-3">
-                <label class="control-label" for="datahora">Data/Horário</label>
+                <label class="control-label" for="form_data">Data/Horário</label>
                 <?php echo $this->formRow($form->get('form_data')) . PHP_EOL; ?>
-                <span class="help-block">Selecione a Data/Hora <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="left" data-original-title="Selecione a Data/Hora que esta ligação deverá ser realizada"> <span class="glyphicon" data-icon=""></span></a></span>  
+                <span class="help-block">Selecione a Data/Hora <a class="flat-button-label" href="#" data-toggle="tooltip" data-placement="bottom" data-original-title="Selecione a Data/Hora que esta ligação deverá ser realizada"> <span class="glyphicon" data-icon=""></span></a></span>  
             </div>
         </div>
 
         <div class="col-md-12">
-            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Editar</button>
+            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Agendar</button>
         </div>
         <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
     </div>
 </div>
+
+<script type="text/javascript">
+    var proj_id = $('#form_projeto').val();
+    function get_etapas(proj_id) {
+        var projeto = $('#form_projeto').val();
+        $.ajax('<?php echo $this->url('comunicacoes', array('action' => 'get-etapas')); ?>?proj_id=' + projeto, {
+            type: 'get',
+            dataType: 'json',
+            data: {
+                proj_id: proj_id
+            },
+            success: function(data) {
+                $('#form_etapas').html('');
+                $.each(data, function(index, etapas) {
+                    $('#form_etapas').append('<option value="' + etapas.valor + '">' + etapas.label + '</option>');
+                });
+            },
+            error: function(error) {
+            }
+        });
+    }
+    get_etapas(proj_id);
+</script>
+
+<script src="<?php echo $this->basePath() . '/js/multisearch/typeahead.bundle.js'; ?>"></script>
+<script src="<?php echo $this->basePath() . '/js/multisearch/bootstrap-tagsinput.js'; ?>"></script>
+
+<script>
+//var contatos = new Bloodhound({
+//  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nomecontatos'),
+//  queryTokenizer: Bloodhound.tokenizers.whitespace,
+//  prefetch: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>',
+//  remote: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>'
+//});
+//
+//contatos.initialize();
+//contatos.clearPrefetchCache();
+//contatos.clearRemoteCache();
+//
+//$('#form_origem').tagsinput({
+//  //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+//  itemValue: function(item) {
+//    return item.e_id;
+//  },
+//  itemText: function(item) {
+//    return item.nomecontatos;
+//  },
+//  typeaheadjs: {
+//    name: 'contatos',
+//    //displayKey: 'nomecontatos',
+//    displayKey: function(item) {
+//      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
+//    },
+//    source: contatos.ttAdapter()
+//  }
+//});
+//$('#form_origem').tagsinput('add', {"e_id": 198 , "nomecontatos": "Amsterdam"});
+//
+//$('#form_destino').tagsinput({
+//  //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+//  itemValue: function(item) {
+//    return item.e_id;
+//  },
+//  itemText: function(item) {
+//    return item.nomecontatos;
+//  },
+//  typeaheadjs: {
+//    name: 'contatos',
+//    displayKey: function(item) {
+//      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
+//    },
+//    source: contatos.ttAdapter()
+//  }
+//});
+</script>

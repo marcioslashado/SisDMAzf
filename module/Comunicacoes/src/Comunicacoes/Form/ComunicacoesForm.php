@@ -69,26 +69,6 @@ class ComunicacoesForm extends Form {
             ),
         ));
         $this->add(array(
-            'name' => 'form_duracao',
-            'attributes' => array(
-                'type' => 'text',
-                'id' => 'duracao',
-                'class' => 'form-control input-sm',
-                'placeholder' => 'Duração da ligação',
-                'required' => 'required',
-            ),
-        ));
-        $this->add(array(
-            'name' => 'form_nota',
-            'attributes' => array(
-                'type' => 'textarea',
-                'id' => 'nota',
-                'class' => 'form-control input-sm',
-                'placeholder' => '',
-                'required' => 'required',
-            ),
-        ));
-        $this->add(array(
             'name' => 'form_status',
             'type' => 'Zend\Form\Element\Select',
             'attributes' => array(
@@ -149,6 +129,26 @@ class ComunicacoesForm extends Form {
                 'value_options' => array(
                     '' => ':: Selecione um Projeto ::',
                 ),
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_duracao',
+            'attributes' => array(
+                'type' => 'text',
+                'id' => 'duracao',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Duração da ligação',
+                'required' => 'required',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'form_nota',
+            'attributes' => array(
+                'type' => 'textarea',
+                'id' => 'nota',
+                'class' => 'form-control input-sm',
+                'placeholder' => '',
+                'required' => 'required',
             ),
         ));
     }

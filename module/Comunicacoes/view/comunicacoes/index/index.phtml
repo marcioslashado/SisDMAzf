@@ -108,7 +108,7 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
                                 <td>{{data.descricao_comunicacao}}</td>
                                 <td>{{data.data_comunicacao}}</td>
                                 <td ng-if="data.status_comunicacao == 'Realizado'"><span class="badge badge-success">Realizado</span></td>
-                                <td ng-if="data.status_comunicacao == 'Pendente'"><span class="badge badge-warning">Pendente</span></td>
+                                <td ng-if="data.status_comunicacao == 'Pendente'"><span class="badge badge-warning">Agendado</span></td>
                                 <td ng-if="data.status_comunicacao == 'Remarcado'"><span class="badge badge-warning">Remarcado</span></td>
                                 <td ng-if="data.status_comunicacao == 'Cancelado'"><span class="badge badge-important">Cancelado</span></td>
                                 <td class="text-right">

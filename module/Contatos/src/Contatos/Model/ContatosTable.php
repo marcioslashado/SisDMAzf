@@ -75,14 +75,29 @@ class ContatosTable extends AbstractTableGateway {
                     'e_id' => 'id',
                     'e_tipo' => 'tipo_email',
                     'e_email' => 'email'
-        ), 'left');
+        ));
+        //), 'left');
         
         $selectString = $sql->getSqlStringForSqlObject($select);
         //echo $select->getSqlString();
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $selectData[] = $res; //retorna logo tudo
+            $selectData[] = $res;
+//           if(is_null($res['e_email'])){$res['e_email'] = "Usuário sem Email";}
+//           if(is_null($res['e_id'])){$res['e_id'] = 0;}
+//           
+//            $selectData[] = array(
+//                'idcontatos' => $res['idcontatos'],
+//                'nomecontatos' => $res['nomecontatos'],
+//                'siglacontatos' => $res['siglacontatos'],
+//                'orgaocontatos' => $res['orgaocontatos'],
+//                'enderecoorgao' => $res['enderecoorgao'],
+//                'cargocontato' => $res['cargocontato'],
+//                'e_id' => $res['e_id'],
+//                'e_tipo' => $res['e_tipo'],
+//                'e_email' => $res['e_email']
+//            );
         }
         return json_encode($selectData);
     }
@@ -102,7 +117,6 @@ class ContatosTable extends AbstractTableGateway {
                 ))
                 ->where(array('c.idcontatos' => $id));
 
-        //echo $select->getSqlString(); //Exibe a consulta em SQL
         $result = $this->selectWith($select);
         $row = $result->current();
         if (!$row) {
