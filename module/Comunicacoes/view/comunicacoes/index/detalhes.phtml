@@ -4,9 +4,9 @@ $this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
 ?>  
 
 <?php
-$title = 'Detalhes da Ligação "' . $this->escapeHtml($ligacao->l_id) . '"';
+$title = 'Detalhes da Ligação "' . $this->escapeHtml($comunicacao->id_comunicacao) . '"';
 $this->headTitle($title);
-$date = new \DateTime($this->escapeHtml($ligacao->l_data));
+$date = new \DateTime($this->escapeHtml($comunicacao->data));
 $dataAtual = $date->format('d/m/Y à\s H:i');
 ?>
 
@@ -18,23 +18,43 @@ $dataAtual = $date->format('d/m/Y à\s H:i');
         <table class="table table-striped">
             <tr>
                 <th><strong>De:</strong></th>
-                <td><?php echo $this->escapeHtml($ligacao->l_membro); ?></td>
+                <td>
+                        <?php 
+                        foreach ($this->remetentes as $res) {
+                            if(count($this->remetentes) > 1){
+                                echo "<i>".$res['nomecontatos']."</i>, ";
+                            }else{
+                                echo "<i>".$res['nomecontatos']."</i>";
+                            }
+                        }
+                        ?>
+                </td>
             </tr>
             <tr>
                 <th><strong>Para:</strong></th>
-                <td><?php echo $this->escapeHtml($ligacao->l_destino); ?></td>
+                <td>
+                        <?php 
+                        foreach ($this->destinatarios as $res) {
+                            if(count($this->destinatarios) > 1){
+                                echo "<i>".$res['nomecontatos']."</i>, ";
+                            }else{
+                                echo "<i>".$res['nomecontatos']."</i>";
+                            }
+                        }
+                        ?>
+                </td>
             </tr>
             <tr>
                 <th><strong>Assunto:</strong></th>
-                <td><?php echo $this->escapeHtml($ligacao->l_assunto); ?></td>
+                <td><i><?php echo $this->escapeHtml($comunicacao->descricao); ?></i></td>
             </tr>
             <tr>
                 <th><strong>Horário:</strong></th>
-                <td><?php echo $dataAtual; ?></td>
+                <td><i><?php echo $dataAtual; ?></i></td>
             </tr>
             <tr>
                 <th><strong>Status:</strong></th>
-                <td><?php echo $this->escapeHtml($ligacao->l_status); ?></td>
+                <td><i><?php echo $this->escapeHtml($comunicacao->status); ?></i></td>
             </tr>
         </table>
         <div ng-controller="fessCntrl">
@@ -42,9 +62,12 @@ $dataAtual = $date->format('d/m/Y à\s H:i');
                 <tr>
                     <th colspan="2"><strong>Notas:</strong></th>
                 </tr>
-                <?php foreach ($log as $res) { ?>
+                <?php foreach ($this->log as $res) { 
+                    $date_log = new \DateTime($this->escapeHtml($res['data_log']));
+                    $data_log = $date_log->format('d/m/Y à\s H:i');
+                    ?>
                     <tr>
-                        <td colspan="2"><?php echo $res['ll_data']; ?> - <?php echo $res['ll_nota']; ?></td>
+                        <td colspan="2"><?php echo $data_log; ?> - <?php echo $res['nota']; ?></td>
                     </tr>
                 <?php } ?>
             </table>

@@ -23,14 +23,14 @@ $this->headTitle($title);
     <div class="table-responsive">
         <?php
         $form = $this->form;
-        $form->setAttribute('action', $this->url('ligacoes', array('action' => 'edit', 'form_codigo' => $this->form_codigo)));
+        $form->setAttribute('action', $this->url('comunicacoes', array('action' => 'edit', 'form_codigo' => $this->form_codigo)));
         $form->prepare();
         echo $this->form()->openTag($form) . PHP_EOL;
         ?>
         <legend><?php echo $this->escapeHtml($title); ?></legend>
         <?php echo $this->formHidden($form->get('form_codigo')) . PHP_EOL; ?>
         <?php if ($this->mensagem) { ?>
-            <div style="margin-top:10px;"><div class="alert alert-success">Comunicação agendada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('comunicacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Comunicações</a></div></div>
+            <div style="margin-top:10px;"><div class="alert alert-success">Comunicação editada com sucesso! <a class="btn btn-success" href="<?php echo $this->url('comunicacoes'); ?>" data-original-title="" title=""><span data-icon="" class="glyphicon"></span> Retornar para Comunicações</a></div></div>
         <?php } ?>
 
         <div class='row'>
@@ -81,7 +81,7 @@ $this->headTitle($title);
         </div>
 
         <div class="col-md-12">
-            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Agendar</button>
+            <button class="btn btn-primary" name="adicionar" id="adicionar"><span data-icon="" class="glyphicon"></span> Editar</button>
         </div>
         <?php echo $this->form()->closeTag($form) . PHP_EOL; ?>
     </div>
@@ -114,50 +114,59 @@ $this->headTitle($title);
 <script src="<?php echo $this->basePath() . '/js/multisearch/bootstrap-tagsinput.js'; ?>"></script>
 
 <script>
-//var contatos = new Bloodhound({
-//  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nomecontatos'),
-//  queryTokenizer: Bloodhound.tokenizers.whitespace,
-//  prefetch: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>',
-//  remote: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>'
-//});
-//
-//contatos.initialize();
-//contatos.clearPrefetchCache();
-//contatos.clearRemoteCache();
-//
-//$('#form_origem').tagsinput({
-//  //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
-//  itemValue: function(item) {
-//    return item.e_id;
-//  },
-//  itemText: function(item) {
-//    return item.nomecontatos;
-//  },
-//  typeaheadjs: {
-//    name: 'contatos',
-//    //displayKey: 'nomecontatos',
-//    displayKey: function(item) {
-//      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
-//    },
-//    source: contatos.ttAdapter()
-//  }
-//});
-//$('#form_origem').tagsinput('add', {"e_id": 198 , "nomecontatos": "Amsterdam"});
-//
-//$('#form_destino').tagsinput({
-//  //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
-//  itemValue: function(item) {
-//    return item.e_id;
-//  },
-//  itemText: function(item) {
-//    return item.nomecontatos;
-//  },
-//  typeaheadjs: {
-//    name: 'contatos',
-//    displayKey: function(item) {
-//      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
-//    },
-//    source: contatos.ttAdapter()
-//  }
-//});
+var contatos = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nomecontatos'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>',
+  remote: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>'
+});
+
+contatos.initialize();
+contatos.clearPrefetchCache();
+contatos.clearRemoteCache();
+
+$('#form_origem').tagsinput({
+  maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+  itemValue: function(item) {
+    return item.e_id;
+  },
+  itemText: function(item) {
+    return item.nomecontatos;
+  },
+  typeaheadjs: {
+    name: 'contatos',
+    //displayKey: 'nomecontatos',
+    displayKey: function(item) {
+      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
+    },
+    source: contatos.ttAdapter()
+  }
+});
+<?php 
+foreach ($this->remetentes as $res) {
+    echo "$('#form_origem').tagsinput('add', {'e_id': ".$res['id_email']." , 'nomecontatos': '".$res['nomecontatos']."'});";
+}
+?>
+
+$('#form_destino').tagsinput({
+  //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+  itemValue: function(item) {
+    return item.e_id;
+  },
+  itemText: function(item) {
+    return item.nomecontatos;
+  },
+  typeaheadjs: {
+    name: 'contatos',
+    displayKey: function(item) {
+      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
+    },
+    source: contatos.ttAdapter()
+  }
+});
+<?php 
+foreach ($this->destinatarios as $res) {
+    echo "$('#form_destino').tagsinput('add', {'e_id': ".$res['id_email']." , 'nomecontatos': '".$res['nomecontatos']."'});";
+}
+?>
 </script>

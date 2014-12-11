@@ -1,7 +1,7 @@
 <?php
-$title = 'Excluir Ligação';
+$title = 'Excluir Comunicação';
 $this->headTitle($title);
-$date = new \DateTime($this->escapeHtml($ligacao->l_data));
+$date = new \DateTime($this->escapeHtml($comunicacao->data));
 $dataAtual = $date->format('d/m/Y à\s H:i');
 ?>
 <div class="container-fluid">
@@ -12,19 +12,43 @@ $dataAtual = $date->format('d/m/Y à\s H:i');
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Membro</th>
+                    <th>Remetente</th>
                     <th>Destinatário</th>
-                    <th>Assunto</th>
-                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                    <th>Data/Hora</th>
+                    <th>Status </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><?php echo $this->escapeHtml($ligacao->l_id); ?></td>
-                    <td><?php echo $this->escapeHtml($ligacao->l_membro); ?></td>
-                    <td><?php echo $this->escapeHtml($ligacao->l_destino); ?></td>
-                    <td><?php echo $this->escapeHtml($ligacao->l_assunto); ?></td>
-                    <td><?php echo $dataAtual; ?></td>
+                    <td><?php echo $this->escapeHtml($comunicacao->id_comunicacao); ?></td>
+                    <td>
+                        <?php 
+                        foreach ($this->remetentes as $res) {
+                            if(count($this->remetentes) > 1){
+                                echo $res['nomecontatos'].", ";
+                            }else{
+                                echo $res['nomecontatos'];
+                            }
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <?php 
+                        foreach ($this->destinatarios as $res) {
+                            if(count($this->destinatarios) > 1){
+                                echo $res['nomecontatos'].", ";
+                            }else{
+                                echo $res['nomecontatos'];
+                            }
+                        }
+                        ?>
+                    </td>
+                    <td><?php if($comunicacao->tipo_comunicacao == 1){echo 'Enviado <i class="glyphicon glyphicon-send"></i>';}elseif($comunicacao->tipo_comunicacao == 2){echo 'Recebido <i class="glyphicon glyphicon-cloud-download"></i>';} ?></td>
+                    <td><?php echo $this->escapeHtml($comunicacao->descricao); ?></td>
+                    <td><?php echo $this->escapeHtml($dataAtual); ?></td>
+                    <td><?php echo $this->escapeHtml($comunicacao->status); ?></td>
                 </tr>
             </tbody>
         </table>
@@ -32,7 +56,7 @@ $dataAtual = $date->format('d/m/Y à\s H:i');
             <h2 class="sub-header" style="margin-bottom: 20px;">Confirma Exclusão?</h2>
         </div>
         <div class="col-md-12 text-center">
-            <?php $url = $this->url('ligacoes', array('action' => 'del', 'form_codigo' => $this->form_codigo)); ?>
+            <?php $url = $this->url('comunicacoes', array('action' => 'del', 'form_codigo' => $this->form_codigo)); ?>
             <form action="<?php echo $url; ?>" method="post">
                 <div>
                     <input type="hidden" name="form_codigo" value="<?php echo (int) $this->form_codigo; ?>" />

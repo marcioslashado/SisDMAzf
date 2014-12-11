@@ -51,6 +51,7 @@ class Comunicacoes implements InputFilterAwareInterface {
          * Registro de campos do Formulário
          * Necessários para a ação de CRUD
          */
+        
         $this->form_codigo = (isset($data['id_comunicacao'])) ? $data['id_comunicacao'] : null;
         $this->form_origem = (isset($data['id_contato_rem'])) ? $data['id_contato_rem'] : null;
         $this->form_destino = (isset($data['id_contato_dest'])) ? $data['id_contato_dest'] : null;

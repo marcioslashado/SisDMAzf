@@ -118,8 +118,11 @@ class IndexController extends AbstractActionController
             $comunicacao = $request->getPost();
             
             $view = new ViewModel(array(
+                'mensagem' => $this->getComunicacoesTable()->saveComunicacao($comunicacao),
                 'form_codigo' => $id,
                 'form' => $form,
+                'remetentes' => $this->getComunicacoesTable()->getCampos($comunicacao->form_origem), 
+                'destinatarios' => $this->getComunicacoesTable()->getCampos($comunicacao->form_destino) 
             ));
             $view->setTemplate('comunicacoes/index/edit');
             return $view;
@@ -127,6 +130,8 @@ class IndexController extends AbstractActionController
         $view = new ViewModel(array(
             'form_codigo' => $id,
             'form' => $form,
+            'remetentes' => $this->getComunicacoesTable()->getCampos($comunicacao->id_contato_rem), 
+            'destinatarios' => $this->getComunicacoesTable()->getCampos($comunicacao->id_contato_dest)
         ));
        $view->setTemplate('comunicacoes/index/edit');
         return $view;
@@ -143,7 +148,7 @@ class IndexController extends AbstractActionController
             $del = $request->getPost()->get('del', 'Cancelar');
             if ($del == 'Confirmar') {
                 $id = (int)$request->getPost()->get('form_codigo');
-                $this->getComunicacoesTable()->deleteLigacao($id);
+                $this->getComunicacoesTable()->deleteComunicacao($id);
             }
             return $this->redirect()->toRoute('comunicacoes');
         }
@@ -152,7 +157,9 @@ class IndexController extends AbstractActionController
         
         $view = new ViewModel(array(
             'form_codigo' => $id,
-            'ligacao' => $comunicacao
+            'comunicacao' => $comunicacao, 
+            'remetentes' => $this->getComunicacoesTable()->getCampos($comunicacao->id_contato_rem), 
+            'destinatarios' => $this->getComunicacoesTable()->getCampos($comunicacao->id_contato_dest)
         ));
         $view->setTemplate('comunicacoes/index/del');
         return $view;
@@ -160,13 +167,14 @@ class IndexController extends AbstractActionController
     
     public function anotacoesAction()
     {
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('form_codigo');
         if (!$id) {
             return $this->redirect()->toRoute('comunicacoes');
         }
         $comunicacao = $this->getComunicacoesTable()->getComunicacao($id);
 
-        $form = new ComunicacoesForm();
+        $form = new ComunicacoesForm($dbAdapter);
         $form->bind($comunicacao);
         
         $request = $this->getRequest();
@@ -201,8 +209,10 @@ class IndexController extends AbstractActionController
         $log = $this->getComunicacoesTable()->getDetalhes($id);
         $view = new ViewModel(array(
             'form_codigo' => $id,
-            'ligacao' => $comunicacao, 
+            'comunicacao' => $comunicacao, 
             'log' => $log, 
+            'remetentes' => $this->getComunicacoesTable()->getCampos($comunicacao->id_contato_rem), 
+            'destinatarios' => $this->getComunicacoesTable()->getCampos($comunicacao->id_contato_dest)
         ));
         $view->setTemplate('comunicacoes/index/detalhes');
         return $view;

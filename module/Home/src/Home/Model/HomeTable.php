@@ -204,14 +204,6 @@ class HomeTable extends AbstractTableGateway {
                     'descricao' => 'descricao',
                     'status' => 'status'
                 ))
-                ->join(array('r' => 'contatos'), 'r.idcontatos = c.id_contato_rem', array(
-                    'r_idcontatos' => 'idcontatos',
-                    'r_nome' => 'nomecontatos',
-                        ), 'left')
-                ->join(array('d' => 'contatos'), 'd.idcontatos = c.id_contato_dest', array(
-                    'd_idcontatos' => 'idcontatos',
-                    'd_nome' => 'nomecontatos',
-                        ), 'left')
         ->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('MONTH(data) = ?', $date->format('m'))); //Seleciona por mês
         //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('DAY(data) = ?', $date->format('d'))); //Seleciona por Dia
         //->where->addPredicate(new \Zend\Db\Sql\Predicate\Expression('WEEK (data) = WEEK(current_date) AND YEAR(data_hora) = YEAR(current_date)')); //Seleciona por Semana
@@ -222,7 +214,46 @@ class HomeTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $selectData[] = $res;
+            $remetentes = $this->getNomes($res['id_contato_rem']);
+            $destinatarios = $this->getNomes($res['id_contato_dest']);
+            $selectData[] = array(
+                'id_comunicacao' => $res['id_comunicacao'],
+                'id_projeto' => $res['id_projeto'],
+                'id_etapa' => $res['id_etapa'],
+                'data' => $res['data'],
+                'tipo_comunicacao' => $res['tipo_comunicacao'],
+                'r_nome' => $remetentes,
+                'd_nome' => $destinatarios,
+                'descricao' => $res['descricao'],
+                'status' => $res['status']
+            );
+        }
+        return $selectData;
+    }
+    
+    public function getNomes($id) {
+        $id = $id;
+        $sql = new Sql($this->adapter);
+        $this->table = array('ce' => 'contatos_emails');
+        $select = new Select();
+        $select->from(array('ce' => 'contatos_emails'));
+        $select
+                ->columns(array(
+                    'id_email' => 'id',
+                    'id_contato' => 'id_contato'
+                ))
+                ->join(array('c' => 'contatos'), 'c.idcontatos = ce.id_contato', array(
+                    'c_id' => 'idcontatos',
+                    'nomecontatos' => new \Zend\Db\Sql\Expression("group_concat(DISTINCT(c.nomecontatos) SEPARATOR '; ')"),
+                        ), 'left')
+                ->where('ce.id IN(' . $id . ')');
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData = $res['nomecontatos'];
         }
         return $selectData;
     }
