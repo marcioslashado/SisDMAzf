@@ -62,7 +62,7 @@ echo $this->headScript()
         scheduler.form_blocks["contact_view"] = {
             render: function (sns) {
                 var html = '<div class="dhx_cal_ltext" style="height: 31px;">';
-                html += '<input type="text" class="form-control input-sm" id="form_convidados"></div>';
+                html += '<textarea id="form_convidados"></textarea></div>';
                 return html;
             },
             set_value: function (node, value, ev) {
@@ -212,22 +212,22 @@ contatos.clearPrefetchCache();
 contatos.clearRemoteCache();
 
 function auto_complete(){
-$('#form_convidados').tagsinput({
-  //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
-  itemValue: function(item) {
-    return item.e_id;
-  },
-  itemText: function(item) {
-    return item.nomecontatos;
-  },
-  typeaheadjs: {
-    name: 'contatos',
-    //displayKey: 'nomecontatos',
-    displayKey: function(item) {
-      return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
-    },
-    source: contatos.ttAdapter()
-  }
-});
+    $('#form_convidados').tagsinput({
+      //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+      itemValue: function(item) {
+        return item.e_id;
+      },
+      itemText: function(item) {
+        return item.nomecontatos;
+      },
+      typeaheadjs: {
+        name: 'contatos',
+        //displayKey: 'nomecontatos',
+        displayKey: function(item) {
+          return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
+        },
+        source: contatos.ttAdapter()
+      }
+    });
 }
 </script>

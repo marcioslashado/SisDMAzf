@@ -1,4 +1,4 @@
-.bootstrap-tagsinput { width: 100%; border-radius: 0px !important;}
+.bootstrap-tagsinput { position: relative; width: 100%; border-radius: 0px !important;}
 
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
