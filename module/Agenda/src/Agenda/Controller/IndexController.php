@@ -97,7 +97,7 @@ class IndexController extends AbstractActionController {
             $b = $_POST;
             $calendar = array_combine($a, $b); //Dá fim nas ids aleatórias dos campos
         }
-
+        
         if ($request->isPost()) {
             $this->getAgendaTable()->saveAgenda($calendar);
             exit();
@@ -124,6 +124,7 @@ class IndexController extends AbstractActionController {
     public function indexAction() {
         $view = new ViewModel(array(
             'users' => $this->getHomeTable()->getUsers(),
+            //'participantes' => $this->getAgendaTable()->getParticipantes($comunicacao->form_destino)
         ));
         $view->setTemplate('agenda/index/index');
         return $view;

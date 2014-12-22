@@ -48,7 +48,7 @@ class AgendaTable extends AbstractTableGateway {
                 'end_date' => $res['end_date'],
                 'text' => $res['text'],
                 'details' => $res['details'],
-                'convidados' => $res['convidados'],
+                'convidados' => $this->getNomes($res['convidados']),
                 'event_location' => $res['event_location']
             );
         }
@@ -79,6 +79,60 @@ class AgendaTable extends AbstractTableGateway {
             throw new \Exception("Could not find row $id");
         }
         return $row;
+    }
+    
+    public function getParticipantes($id) {
+        $id = $id;
+        $sql = new Sql($this->adapter);
+        $this->table = array('ce' => 'contatos_emails');
+        $select = new Select();
+        $select->from(array('ce' => 'contatos_emails'));
+        $select
+                ->columns(array(
+                    'id_email' => 'id',
+                    'id_contato' => 'id_contato'
+                ))
+                ->join(array('c' => 'contatos'), 'c.idcontatos = ce.id_contato', array(
+                    'c_id' => 'idcontatos',
+                    'nomecontatos' => 'nomecontatos'
+                        ), 'left')
+                ->where('ce.id IN(' . $id . ')');
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = $res;
+        }
+        return $selectData;
+    }
+    
+    public function getNomes($id) {
+        $id = $id;
+        $sql = new Sql($this->adapter);
+        $this->table = array('ce' => 'contatos_emails');
+        $select = new Select();
+        $select->from(array('ce' => 'contatos_emails'));
+        $select
+                ->columns(array(
+                    'id_email' => 'id',
+                    'id_contato' => 'id_contato'
+                ))
+                ->join(array('c' => 'contatos'), 'c.idcontatos = ce.id_contato', array(
+                    'c_id' => 'idcontatos',
+                    'nomecontatos' => new \Zend\Db\Sql\Expression("group_concat(DISTINCT(c.nomecontatos) SEPARATOR '; ')"),
+                        ), 'left')
+                ->where('ce.id IN(' . $id . ')');
+
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData = $res['nomecontatos'];
+        }
+        return $selectData;
     }
 
     public function saveAgenda($calendar) {
@@ -136,5 +190,4 @@ class AgendaTable extends AbstractTableGateway {
             echo "Agenda excluída com Sucesso!";
         }
     }
-
 }

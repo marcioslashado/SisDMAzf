@@ -90,14 +90,13 @@ echo $this->headScript()
         scheduler.config.lightbox.sections = [
             {name: "Título", height: 50, map_to: "text", type: "textarea", focus: false},
             {name: "description", height: 50, map_to: "details", type: "textarea", focus: false},
-            {name: "Convidados", height: 50, map_to: "convidados", type: "textarea", focus: false},
-            {name: "Email", height: 50, map_to: "email", type: "contact_view", focus: false},
+            {name: "Convidados", height: 50, map_to: "convidados", type: "contact_view", focus: false},
             {name: "Endereço", height: 43, map_to: "event_location", type: "textarea", default_value: "Rua São José, nº 01, Centro - Fortaleza-CE"},
             //{name: "recorrente", type: "recurring", map_to: "rec_type", button: "recurring"}, //Agendamento Recorrente... implantar posteriormente
             {name: "time", height: 72, type: "time", map_to: "auto"}
         ];
 
-        scheduler.config.full_day = true; // enable parameter to get full day event option on the lightbox form
+        scheduler.config.full_day = true;
         scheduler.config.buttons_left = ["dhx_save_btn", "dhx_cancel_btn"];
         //scheduler.config.buttons_left = ["dhx_save_btn", "dhx_cancel_btn", "locate_button"];
         //scheduler.locale.labels["locate_button"] = "Localização"; //Implantar posteriormente
@@ -108,12 +107,19 @@ echo $this->headScript()
         dp.init(scheduler);
 
         scheduler.attachEvent("onBeforeLightbox", function (e) {
-            console.log('abriu');
-            setTimeout(function () {
-                      auto_complete();
-            }, 1000);
-
-            return true;
+            if (scheduler.getState().lightbox_id) {
+                console.log('abriu');
+                setTimeout(function () {
+                          auto_complete();
+                }, 0);
+                return true;
+            } else {
+                console.log('abriu');
+                setTimeout(function () {
+                          auto_complete();
+                }, 0);
+                return true;
+            }
         });
         scheduler.attachEvent("onLightboxButton", function (button_id, node, e) {
             if (button_id == "locate_button") {
@@ -168,20 +174,22 @@ echo $this->headScript()
     }
 </script>
 
-        <?php if (isset($_SESSION['User']['userId'])) { ?>
-            <nav>
-                <div class="navbar-header pull-right">
-                    <a id="nav-expander" class="nav-expander fixed">
-                        <span class="glyphicon" data-icon="&#xe0a5;"></span>
-                    </a>
-                </div>
-                <ul class="list-unstyled main-menu">
-                    <?php foreach ($this->users as $res) { ?>
-                        <li class="clearfix"><span class="pull-left"><?php echo $res['nome']." ".$res['sobrenome']; ?></span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="<?php echo $res['id']; ?>" <?php if($res['status'] == "Active"){echo "checked";} ?> data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
-                    <?php } ?>
-                </ul>
-            </nav>
-        <?php } ?>
+<?php if (isset($_SESSION['User']['userId'])) { ?>
+    <nav>
+        <div class="navbar-header pull-right">
+            <a id="nav-expander" class="nav-expander fixed">
+                <span class="glyphicon" data-icon="&#xe0a5;"></span>
+            </a>
+        </div>
+        <ul class="list-unstyled main-menu">
+            <?php foreach ($this->users as $res) { ?>
+                <li class="clearfix"><span class="pull-left"><?php echo $res['nome'] . " " . $res['sobrenome']; ?></span> <span class="pull-right"><input type="checkbox" name="situacao-membro" id="<?php echo $res['id']; ?>" <?php if ($res['status'] == "Active") {
+            echo "checked";
+        } ?> data-size="small" data-on-text="Presente" data-off-text="Ausente" data-on-color="success" data-off-color="danger" data-label-text="< >"></span></li>
+    <?php } ?>
+        </ul>
+    </nav>
+<?php } ?>
 
 <div id="scheduler_here" class="dhx_cal_container container" style='width:100%; height:85%;'>
     <div class="dhx_cal_navline">
@@ -200,34 +208,34 @@ echo $this->headScript()
 </div>
 
 <script>
-var contatos = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nomecontatos'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>',
-  remote: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>'
-});
-
-contatos.initialize();
-contatos.clearPrefetchCache();
-contatos.clearRemoteCache();
-
-function auto_complete(){
-    $('#form_convidados').tagsinput({
-      //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
-      itemValue: function(item) {
-        return item.e_id;
-      },
-      itemText: function(item) {
-        return item.nomecontatos;
-      },
-      typeaheadjs: {
-        name: 'contatos',
-        //displayKey: 'nomecontatos',
-        displayKey: function(item) {
-          return '<b>'+item.nomecontatos +'</b><br />('+item.cargocontato+')<br /><i>&laquo;'+item.e_email+'&raquo;</i>';
-        },
-        source: contatos.ttAdapter()
-      }
+    var contatos = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nomecontatos'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>',
+        remote: '<?php echo $this->url('contatos', array('action' => 'listaemails')); ?>'
     });
-}
+
+    contatos.initialize();
+    contatos.clearPrefetchCache();
+    contatos.clearRemoteCache();
+
+    function auto_complete() {
+        $('#form_convidados').tagsinput({
+            //maxTags: 1, //Limita a quantidade de tags em um input... desativado para permitir ilimitados ou setar um valor
+            itemValue: function (item) {
+                return item.e_id;
+            },
+            itemText: function (item) {
+                return item.nomecontatos;
+            },
+            typeaheadjs: {
+                name: 'contatos',
+                //displayKey: 'nomecontatos',
+                displayKey: function (item) {
+                    return '<b>' + item.nomecontatos + '</b><br />(' + item.cargocontato + ')<br /><i>&laquo;' + item.e_email + '&raquo;</i>';
+                },
+                source: contatos.ttAdapter()
+            }
+        });
+    }
 </script>
