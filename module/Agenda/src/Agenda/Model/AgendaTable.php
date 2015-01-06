@@ -56,6 +56,8 @@ class AgendaTable extends AbstractTableGateway {
     }
 
     public function getCalendar($id) {
+        $id = $id;
+        $sql = new Sql($this->adapter);
         $this->table = array('a' => 'agenda');
         $select = new Select();
         $select->from(array('a' => 'agenda'));
@@ -73,12 +75,22 @@ class AgendaTable extends AbstractTableGateway {
                 ->where(array('a.id_agenda' => $id));
 
         //echo $select->getSqlString(); //Exibe a consulta em SQL
-        $result = $this->selectWith($select);
-        $row = $result->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $id");
+        $selectString = $sql->getSqlStringForSqlObject($select);
+        //echo $select->getSqlString();
+        $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $selectData = array();
+        foreach ($retorno as $res) {
+            $selectData[] = array(
+                'a_id' => $res['a_id'],
+                'a_start' => $res['a_start'],
+                'a_end' => $res['a_end'],
+                'a_text' => $res['a_text'],
+                'a_details' => $res['a_details'],
+                'a_convidados' => $this->getNomes($res['a_convidados']),
+                'a_location' => $res['a_location']
+            );
         }
-        return $row;
+        return $selectData;
     }
     
     public function getParticipantes($id) {

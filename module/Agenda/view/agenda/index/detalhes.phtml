@@ -1,0 +1,75 @@
+<?php
+$this->headScript()->prependFile($this->basePath() . '/js/ui-bootstrap-tpls-0.10.0.min.js');
+$this->headScript()->prependFile($this->basePath() . '/js/angular.min.js');
+?>  
+
+<?php
+foreach ($this->agenda as $res) {
+$title = $res['a_text'];
+}
+$this->headTitle($title);
+?>
+
+
+<div class="container-fluid">
+
+    <div class="table-responsive">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+        <table class="table table-striped">
+            <tr>
+                <th><strong>Descrição:</strong></th>
+                <td>
+                        <?php 
+                        foreach ($this->agenda as $res) {
+                            echo $res['a_details'];
+                        }
+                        ?>
+                </td>
+            </tr>
+            <tr>
+                <th><strong>Convidados:</strong></th>
+                <td>
+                        <?php 
+                        foreach ($this->agenda as $res) {
+                            echo $res['a_convidados'];
+                        }
+                        ?>
+                </td>
+            </tr>
+            <tr>
+                <th><strong>Local:</strong></th>
+                <td>
+                        <?php 
+                        foreach ($this->agenda as $res) {
+                            echo $res['a_location'];
+                        }
+                        ?>
+                </td>
+            </tr>
+            <tr>
+                <th><strong>Início:</strong></th>
+                <td>
+                        <?php 
+                        foreach ($this->agenda as $res) {
+                            $date = new \DateTime($res['a_start']);
+                            echo $date->format('d/m/Y \à\s H:i');
+                        }
+                        ?>
+                </td>
+            </tr>
+            <tr>
+                <th><strong>Término:</strong></th>
+                <td>
+                        <?php 
+                        foreach ($this->agenda as $res) {
+                            $date = new \DateTime($res['a_end']);
+                            echo $date->format('d/m/Y \à\s H:i');
+                        }
+                        ?>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</div>

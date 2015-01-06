@@ -48,7 +48,15 @@ class HomeTable extends AbstractTableGateway {
         $selectData = array();
         foreach ($retorno as $res) {
             $current_date = new \DateTime();
-            $selectData[] = $res;
+            $selectData[] = array(
+                'id_agenda' => $res['id_agenda'],
+                'start_date' => $res['start_date'],
+                'end_date' => $res['end_date'],
+                'text' => $res['text'],
+                'details' => $res['details'],
+                'convidados' => $this->getNomes($res['convidados']),
+                'event_location' => $res['event_location']
+            );
         }
         return $selectData;
     }
@@ -78,7 +86,15 @@ class HomeTable extends AbstractTableGateway {
         $selectData = array();
         foreach ($retorno as $res) {
             $current_date = new \DateTime();
-            $selectData[] = $res;
+            $selectData[] = array(
+                'id_agenda' => $res['id_agenda'],
+                'start_date' => $res['start_date'],
+                'end_date' => $res['end_date'],
+                'text' => $res['text'],
+                'details' => $res['details'],
+                'convidados' => $this->getNomes($res['convidados']),
+                'event_location' => $res['event_location']
+            );
         }
         return $selectData;
     }
@@ -108,7 +124,15 @@ class HomeTable extends AbstractTableGateway {
         $selectData = array();
         foreach ($retorno as $res) {
             $current_date = new \DateTime();
-            $selectData[] = $res;
+            $selectData[] = array(
+                'id_agenda' => $res['id_agenda'],
+                'start_date' => $res['start_date'],
+                'end_date' => $res['end_date'],
+                'text' => $res['text'],
+                'details' => $res['details'],
+                'convidados' => $this->getNomes($res['convidados']),
+                'event_location' => $res['event_location']
+            );
         }
         return $selectData;
     }
@@ -146,7 +170,19 @@ class HomeTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $selectData[] = $res;
+            $remetentes = $this->getNomes($res['id_contato_rem']);
+            $destinatarios = $this->getNomes($res['id_contato_dest']);
+            $selectData[] = array(
+                'id_comunicacao' => $res['id_comunicacao'],
+                'id_projeto' => $res['id_projeto'],
+                'id_etapa' => $res['id_etapa'],
+                'data' => $res['data'],
+                'tipo_comunicacao' => $res['tipo_comunicacao'],
+                'r_nome' => $remetentes,
+                'd_nome' => $destinatarios,
+                'descricao' => $res['descricao'],
+                'status' => $res['status']
+            );
         }
         return $selectData;
     }
@@ -184,7 +220,19 @@ class HomeTable extends AbstractTableGateway {
         $retorno = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $selectData = array();
         foreach ($retorno as $res) {
-            $selectData[] = $res;
+            $remetentes = $this->getNomes($res['id_contato_rem']);
+            $destinatarios = $this->getNomes($res['id_contato_dest']);
+            $selectData[] = array(
+                'id_comunicacao' => $res['id_comunicacao'],
+                'id_projeto' => $res['id_projeto'],
+                'id_etapa' => $res['id_etapa'],
+                'data' => $res['data'],
+                'tipo_comunicacao' => $res['tipo_comunicacao'],
+                'r_nome' => $remetentes,
+                'd_nome' => $destinatarios,
+                'descricao' => $res['descricao'],
+                'status' => $res['status']
+            );
         }
         return $selectData;
     }

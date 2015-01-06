@@ -112,7 +112,7 @@ class IndexController extends AbstractActionController {
             return $this->redirect()->toRoute('agenda');
         }        
         
-        $detalhe = $this->getAgendaTable()->getDetalhes($id);
+        $detalhe = $this->getAgendaTable()->getCalendar($id);
         $view = new ViewModel(array(
             'form_codigo' => $id,
             'agenda' => $detalhe, 

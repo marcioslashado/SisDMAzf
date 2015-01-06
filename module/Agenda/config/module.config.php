@@ -40,7 +40,7 @@ return array(
             'agenda' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/agenda[/:action]',
+                    'route' => '/agenda[/:action][/:form_codigo]',
                     'defaults' => array(
                         'controller' => 'Agenda\Controller\Index',
                         'action' => 'index',
